@@ -1067,7 +1067,7 @@
                 recipientsContainer.textContent = '-';
             }
 
-            const isUserLoggedInView = currentUser !== null && !isAdmin;
+            const isUserLoggedInView = currentUser !== null; // แสดงส่วนดาวน์โหลดไฟล์เสมอสำหรับคนที่ล็อกอิน
             const filesSec = document.getElementById('authorizedFilesSection');
 
             if (isUserLoggedInView) {
