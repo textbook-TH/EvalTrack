@@ -1034,11 +1034,9 @@
 if (errorMsg.toLowerCase().includes('invalid login credentials')) {
     errorMsg = 'อีเมลหรือรหัสผ่านผิดพลาด';
 }
-    }
-    showGlobalAlert('เกิดข้อผิดพลาด', errorMsg, 'error');
-}
+showGlobalAlert('เกิดข้อผิดพลาด', errorMsg, 'error');
         }
-
+    }
         async function handleSignOut() {
             await supabaseClient.auth.signOut();
             currentUser = null;
