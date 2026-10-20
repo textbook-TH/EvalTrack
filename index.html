@@ -958,7 +958,7 @@
                     const confirmPassword = document.getElementById('signupConfirmPassword').value;
 
                     if (!password || !confirmPassword) {
-                        showGlobalAlert('แจ้งเตือน', 'กรุณากรอกข้อมูล', 'error');
+                        showGlobalAlert('แจ้งเตือน', 'กรุณากรอกข้อมูลให้ครบถ้วน', 'error');
                         return;
                     }
 
@@ -973,7 +973,7 @@
                         .eq('email', email);
 
                     if (checkErr || !matchedRecipients || matchedRecipients.length === 0) {
-                        showGlobalAlert('ไม่สามารถสมัครสมาชิกได้', 'อีเมลนี้ยังไม่อยู่ในฐานข้อมูลผู้ขอรับบริการของระบบ', 'error');
+                        showGlobalAlert('ไม่สามารถสมัครสมาชิกได้', 'อีเมลนี้ยังไม่อยู่ในฐานข้อมูลผู้ขอรับบริการ', 'error');
                         return;
                     }
 
@@ -1030,8 +1030,12 @@
                     showGlobalAlert('สำเร็จ', 'เปลี่ยนรหัสผ่านเรียบร้อยแล้ว เข้าสู่ระบบสมบูรณ์', 'success');
                 }
             } catch (err) {
-                showGlobalAlert('เกิดข้อผิดพลาด', err.message || 'ไม่สามารถดำเนินการได้', 'error');
-            }
+    let errorMsg = err.message || 'ไม่สามารถดำเนินการได้';
+    if (errorMsg.includes('Invalid login credentials')) {
+        errorMsg = 'อีเมลหรือรหัสผ่านผิดพลาด';
+    }
+    showGlobalAlert('เกิดข้อผิดพลาด', errorMsg, 'error');
+}
         }
 
         async function handleSignOut() {
