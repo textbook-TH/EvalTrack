@@ -276,10 +276,9 @@
                 <i class="fa-solid fa-xmark text-base"></i>
             </button>
 
-            <!-- ส่วนหัว: รหัสใบแจ้ง และ สถานะ -->
+            <!-- ส่วนหัว: รหัสใบแจ้ง (พื้นส้มทอง ตัวอักษรสีดำ) -->
             <div class="flex items-center space-x-2.5">
-                <span id="modalWorkCode" class="bg-slate-100 text-slate-800 font-mono text-xs px-3 py-1.5 rounded-xl font-bold border border-slate-200/80"></span>
-                <span id="modalStatusBadge"></span>
+                <span id="modalWorkCode" class="bg-amber-500 text-black font-mono text-xs px-3 py-1.5 rounded-xl font-bold shadow-sm"></span>
             </div>
 
             <!-- ชื่อเรื่อง และ หน่วยงาน -->
@@ -297,9 +296,6 @@
                         <i class="fa-solid fa-route text-blue-600 text-base"></i>
                         <span>ขั้นตอนการดำเนินงาน</span>
                     </div>
-                    <span id="modalProgressPercent" class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 font-bold text-xs px-3 py-1 rounded-full border border-emerald-200">
-                        <i class="fa-solid fa-circle-check"></i> <span>0%</span>
-                    </span>
                 </div>
 
                 <!-- Step Icons Grid (4 หัวข้อหลัก) -->
@@ -334,7 +330,7 @@
                 </div>
             </div>
 
-            <!-- ส่วนลิงก์ดาวน์โหลด (แสดงเฉพาะโหมดเจ้าหน้าที่เท่านั้น) -->
+            <!-- ส่วนลิงก์ดาวน์โหลด (แสดงเฉพาะหน้าผู้ขอรับบริการที่ทำการล็อกอินแล้วเท่านั้น) -->
             <div id="authorizedFilesSection" class="border-t border-slate-200 pt-5 space-y-3 hidden">
                 <h4 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center text-emerald-600">
                     <i class="fa-solid fa-shield-check mr-2 text-base"></i> เอกสารและไฟล์งานของคุณ (ได้รับสิทธิ์เข้าถึง)
@@ -697,8 +693,11 @@
                     `;
                 }
 
+                // หน้าเจ้าหน้าที่: ไม่ให้เปิดป๊อปอัปเมื่อกดแถวรายการ
+                const clickHandler = isRoleAdminView ? '' : `onclick="openDetailModal(${req.id})"`;
+
                 const rowHtml = `
-                    <tr onclick="openDetailModal(${req.id})" class="hover:bg-slate-50/80 transition-colors cursor-pointer">
+                    <tr ${clickHandler} class="hover:bg-slate-50/80 transition-colors ${isRoleAdminView ? '' : 'cursor-pointer'}">
                         <td class="py-5 px-6 font-bold text-[#C2410C] text-sm font-sans whitespace-nowrap">
                             ${req.work_code || ''}
                         </td>
@@ -755,20 +754,10 @@
             };
         }
 
-        // ฟังก์ชันสร้าง Stepper แบบในตัวอย่างภาพ
+        // ฟังก์ชันสร้าง Stepper ขั้นตอนการดำเนินงาน
         function renderStepper(req) {
             const stepperContainer = document.getElementById('modalStepperContainer');
-            const percentContainer = document.getElementById('modalProgressPercent');
-            
             const currentStatus = getStatusBadge(req).status;
-
-            let progressPercent = '25%';
-            if (currentStatus === 'pending') progressPercent = '25%';
-            if (currentStatus === 'in_progress') progressPercent = '50%';
-            if (currentStatus === 'completed') progressPercent = '100%';
-            if (currentStatus === 'cancelled') progressPercent = '0%';
-
-            percentContainer.querySelector('span').textContent = progressPercent;
 
             const steps = [
                 { id: 'pending', label: 'รอดำเนินการ', icon: 'fa-solid fa-hourglass-start' },
@@ -777,32 +766,23 @@
                 { id: 'cancelled', label: 'ยกเลิก', icon: 'fa-solid fa-ban' }
             ];
 
-            // ลำดับขั้นตอนเพื่อเช็คว่าทำถึงขั้นไหนแล้ว
-            const statusOrder = ['pending', 'in_progress', 'completed'];
-            const currentIndex = statusOrder.indexOf(currentStatus);
-
-            stepperContainer.innerHTML = steps.map((step, idx) => {
-                let isActive = false;
-                let isPassed = false;
+            stepperContainer.innerHTML = steps.map((step) => {
                 let circleClass = "bg-slate-200 text-slate-400";
                 let textClass = "text-slate-400 font-normal";
 
-                if (currentStatus === 'cancelled') {
-                    if (step.id === 'cancelled') {
+                if (step.id === currentStatus) {
+                    if (step.id === 'pending') {
+                        circleClass = "bg-purple-600 text-white shadow-md shadow-purple-200 ring-4 ring-purple-100";
+                        textClass = "text-purple-700 font-bold";
+                    } else if (step.id === 'in_progress') {
+                        circleClass = "bg-amber-400 text-slate-950 shadow-md shadow-amber-200 ring-4 ring-amber-100";
+                        textClass = "text-amber-600 font-bold";
+                    } else if (step.id === 'completed') {
+                        circleClass = "bg-emerald-500 text-white shadow-md shadow-emerald-200 ring-4 ring-emerald-100";
+                        textClass = "text-emerald-600 font-bold";
+                    } else if (step.id === 'cancelled') {
                         circleClass = "bg-rose-500 text-white shadow-md shadow-rose-200 ring-4 ring-rose-100";
                         textClass = "text-rose-600 font-bold";
-                    }
-                } else {
-                    if (step.id === currentStatus) {
-                        isActive = true;
-                        if (step.id === 'pending') circleClass = "bg-amber-500 text-white shadow-md shadow-amber-200 ring-4 ring-amber-100";
-                        if (step.id === 'in_progress') circleClass = "bg-blue-600 text-white shadow-md shadow-blue-200 ring-4 ring-blue-100";
-                        if (step.id === 'completed') circleClass = "bg-emerald-500 text-white shadow-md shadow-emerald-200 ring-4 ring-emerald-100";
-                        textClass = "text-slate-900 font-bold";
-                    } else if (idx < currentIndex && step.id !== 'cancelled') {
-                        isPassed = true;
-                        circleClass = "bg-emerald-500 text-white";
-                        textClass = "text-slate-700 font-semibold";
                     }
                 }
 
@@ -903,11 +883,13 @@
         }
 
         function openDetailModal(id) {
+            // หน้าเจ้าหน้าที่ไม่เปิดป๊อปอัป
+            if (isAdmin && activeTab === 'role') return;
+
             const req = allRequests.find(r => r.id === id);
             if (!req) return;
 
             document.getElementById('modalWorkCode').textContent = req.work_code || '';
-            document.getElementById('modalStatusBadge').innerHTML = getStatusBadge(req).badgeHtml;
             document.getElementById('modalTitle').textContent = req.title || '';
             document.getElementById('modalDepartment').querySelector('span').textContent = req.departments?.department_name || '-';
             document.getElementById('modalLocation').textContent = req.location || '-';
@@ -929,11 +911,11 @@
                 recipientsContainer.textContent = '-';
             }
 
-            // ตรวจสอบว่าเป็นโหมดเจ้าหน้าที่หรือไม่ (หน้าเจ้าหน้าที่เท่านั้นที่จะเห็นดาวน์โหลด)
-            const isRoleAdminView = isAdmin && activeTab === 'role';
+            // ตรวจสอบสิทธิ์ดาวน์โหลดเอกสาร (เฉพาะหน้าผู้ขอรับบริการเมื่อทำการล็อกอินแล้วเท่านั้น)
+            const isUserLoggedInView = currentUser && activeTab === 'role' && !isAdmin;
             const filesSec = document.getElementById('authorizedFilesSection');
 
-            if (isRoleAdminView) {
+            if (isUserLoggedInView) {
                 filesSec.classList.remove('hidden');
 
                 const driveContainer = document.getElementById('modalDriveLinks');
@@ -962,7 +944,7 @@
                     ytContainer.innerHTML = '';
                 }
             } else {
-                // หน้าหลัก: ซ่อนหัวข้อดาวน์โหลด 100%
+                // ซ่อนส่วนดาวน์โหลดในหน้าหลัก
                 filesSec.classList.add('hidden');
             }
 
