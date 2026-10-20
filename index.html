@@ -278,8 +278,8 @@
 
             <!-- ส่วนหัว: รหัสใบแจ้ง และ สถานะ -->
             <div class="flex items-center space-x-2.5">
-                <!-- ปรับแก้สีกรอบส้มทอง พื้นหลังส้มทองอ่อน และตัวอักษรสีดำ -->
-            <span id="modalWorkCode" class="bg-amber-50 text-amber-950 font-mono text-xs px-3 py-1.5 rounded-xl font-bold border-2 border-amber-400 shadow-sm shadow-amber-200/50"></span>
+                <span id="modalWorkCode" class="bg-slate-100 text-slate-800 font-mono text-xs px-3 py-1.5 rounded-xl font-bold border border-slate-200/80"></span>
+                <span id="modalStatusBadge"></span>
             </div>
 
             <!-- ชื่อเรื่อง และ หน่วยงาน -->
@@ -291,15 +291,20 @@
             </div>
 
             <!-- ส่วนแสดงขั้นตอนการดำเนินงาน (STEPPER VIEW) -->
-<div class="bg-slate-50/70 border border-slate-200/70 rounded-3xl p-5 space-y-4">
-    <div class="flex items-center space-x-2 text-slate-800 font-bold text-xs sm:text-sm">
-        <i class="fa-solid fa-route text-blue-600 text-base"></i>
-        <span>ขั้นตอนการดำเนินงาน</span>
-    </div>
+            <div class="bg-slate-50/70 border border-slate-200/70 rounded-3xl p-5 space-y-4">
+                <div class="flex justify-between items-center">
+                    <div class="flex items-center space-x-2 text-slate-800 font-bold text-xs sm:text-sm">
+                        <i class="fa-solid fa-route text-blue-600 text-base"></i>
+                        <span>ขั้นตอนการดำเนินงาน</span>
+                    </div>
+                    <span id="modalProgressPercent" class="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 font-bold text-xs px-3 py-1 rounded-full border border-emerald-200">
+                        <i class="fa-solid fa-circle-check"></i> <span>0%</span>
+                    </span>
+                </div>
 
-    <!-- Step Icons Grid (4 หัวข้อหลัก) -->
-    <div id="modalStepperContainer" class="grid grid-cols-4 gap-2 pt-2 text-center"></div>
-</div>
+                <!-- Step Icons Grid (4 หัวข้อหลัก) -->
+                <div id="modalStepperContainer" class="grid grid-cols-4 gap-2 pt-2 text-center"></div>
+            </div>
 
             <div id="modalCoverContainer" class="rounded-2xl overflow-hidden bg-slate-100 max-h-60 flex items-center justify-center hidden shadow-inner">
                 <img id="modalCoverImg" src="" alt="Cover" class="w-full h-full object-cover hidden">
@@ -751,33 +756,66 @@
         }
 
         // ฟังก์ชันสร้าง Stepper แบบในตัวอย่างภาพ
-       function renderStepper(req) {
-    const stepperContainer = document.getElementById('modalStepperContainer');
-    const currentStatus = getStatusBadge(req).status;
+        function renderStepper(req) {
+            const stepperContainer = document.getElementById('modalStepperContainer');
+            const percentContainer = document.getElementById('modalProgressPercent');
+            
+            const currentStatus = getStatusBadge(req).status;
 
-    const steps = [
-        { id: 'pending', label: 'รอดำเนินการ', icon: 'fa-solid fa-hourglass-start', activeColor: 'bg-amber-500 text-white shadow-md shadow-amber-200 ring-4 ring-amber-100', activeText: 'text-amber-600 font-bold' },
-        { id: 'in_progress', label: 'กำลังดำเนินการ', icon: 'fa-solid fa-gears', activeColor: 'bg-blue-600 text-white shadow-md shadow-blue-200 ring-4 ring-blue-100', activeText: 'text-blue-600 font-bold' },
-        { id: 'completed', label: 'ดำเนินการเสร็จสิ้น', icon: 'fa-solid fa-circle-check', activeColor: 'bg-emerald-500 text-white shadow-md shadow-emerald-200 ring-4 ring-emerald-100', activeText: 'text-emerald-600 font-bold' },
-        { id: 'cancelled', label: 'ยกเลิก', icon: 'fa-solid fa-ban', activeColor: 'bg-rose-500 text-white shadow-md shadow-rose-200 ring-4 ring-rose-100', activeText: 'text-rose-600 font-bold' }
-    ];
+            let progressPercent = '25%';
+            if (currentStatus === 'pending') progressPercent = '25%';
+            if (currentStatus === 'in_progress') progressPercent = '50%';
+            if (currentStatus === 'completed') progressPercent = '100%';
+            if (currentStatus === 'cancelled') progressPercent = '0%';
 
-    stepperContainer.innerHTML = steps.map(step => {
-        const isSelected = step.id === currentStatus;
+            percentContainer.querySelector('span').textContent = progressPercent;
 
-        // ถ้าเลือก ให้ใช้สีประจำสถานะนั้น ถ้าไม่ได้เลือก ให้เป็นสีเทาอ่อน
-        const circleClass = isSelected ? step.activeColor : "bg-slate-100 text-slate-400 border border-slate-200/80";
-        const textClass = isSelected ? step.activeText : "text-slate-400 font-normal";
+            const steps = [
+                { id: 'pending', label: 'รอดำเนินการ', icon: 'fa-solid fa-hourglass-start' },
+                { id: 'in_progress', label: 'กำลังดำเนินการ', icon: 'fa-solid fa-gears' },
+                { id: 'completed', label: 'ดำเนินการเสร็จสิ้น', icon: 'fa-solid fa-circle-check' },
+                { id: 'cancelled', label: 'ยกเลิก', icon: 'fa-solid fa-ban' }
+            ];
 
-        return `
-            <div class="flex flex-col items-center space-y-2">
-                <div class="w-12 h-12 rounded-full flex items-center justify-center text-lg transition-all ${circleClass}">
-                    <i class="${step.icon}"></i>
-                </div>
-                <span class="text-[11px] sm:text-xs leading-tight ${textClass}">${step.label}</span>
-            </div>
-        `;
-    }).join('');
+            // ลำดับขั้นตอนเพื่อเช็คว่าทำถึงขั้นไหนแล้ว
+            const statusOrder = ['pending', 'in_progress', 'completed'];
+            const currentIndex = statusOrder.indexOf(currentStatus);
+
+            stepperContainer.innerHTML = steps.map((step, idx) => {
+                let isActive = false;
+                let isPassed = false;
+                let circleClass = "bg-slate-200 text-slate-400";
+                let textClass = "text-slate-400 font-normal";
+
+                if (currentStatus === 'cancelled') {
+                    if (step.id === 'cancelled') {
+                        circleClass = "bg-rose-500 text-white shadow-md shadow-rose-200 ring-4 ring-rose-100";
+                        textClass = "text-rose-600 font-bold";
+                    }
+                } else {
+                    if (step.id === currentStatus) {
+                        isActive = true;
+                        if (step.id === 'pending') circleClass = "bg-amber-500 text-white shadow-md shadow-amber-200 ring-4 ring-amber-100";
+                        if (step.id === 'in_progress') circleClass = "bg-blue-600 text-white shadow-md shadow-blue-200 ring-4 ring-blue-100";
+                        if (step.id === 'completed') circleClass = "bg-emerald-500 text-white shadow-md shadow-emerald-200 ring-4 ring-emerald-100";
+                        textClass = "text-slate-900 font-bold";
+                    } else if (idx < currentIndex && step.id !== 'cancelled') {
+                        isPassed = true;
+                        circleClass = "bg-emerald-500 text-white";
+                        textClass = "text-slate-700 font-semibold";
+                    }
+                }
+
+                return `
+                    <div class="flex flex-col items-center space-y-2">
+                        <div class="w-12 h-12 rounded-full flex items-center justify-center text-lg transition-all ${circleClass}">
+                            <i class="${step.icon}"></i>
+                        </div>
+                        <span class="text-[11px] sm:text-xs leading-tight ${textClass}">${step.label}</span>
+                    </div>
+                `;
+            }).join('');
+        }
 
         function openAuthModal(mode = 'signin') {
             switchAuthMode(mode);
