@@ -911,7 +911,7 @@
             }
 
             // ตรวจสอบสิทธิ์ดาวน์โหลดเอกสาร (เฉพาะหน้าผู้ขอรับบริการเมื่อทำการล็อกอินแล้วเท่านั้น)
-            const isUserLoggedInView = currentUser && activeTab === 'role' && !isAdmin;
+            const isUserLoggedInView = currentUser !== null && !isAdmin;
             const filesSec = document.getElementById('authorizedFilesSection');
 
             if (isUserLoggedInView) {
