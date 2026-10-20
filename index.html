@@ -904,7 +904,6 @@
                 recipientsContainer.innerHTML = req.request_recipients.map(r => `
                     <div class="flex items-center gap-2">
                         <span class="font-semibold text-slate-800">${r.full_name || 'ไม่ระบุชื่อ'}</span>
-                        <span class="text-slate-500 font-mono text-[11px]">(${r.email || '-'})</span>
                     </div>
                 `).join('');
             } else {
