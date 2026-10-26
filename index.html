@@ -92,7 +92,7 @@
 
         <!-- PAGE 1: HOME VIEW -->
         <section id="homeView" class="space-y-6">
-            <!-- 4 KPI CARDS: Hidden on Mobile as instructed -->
+            <!-- 4 KPI CARDS -->
             <div class="hidden sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div onclick="applyQuickFilter('all')" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer hover:shadow-md transition-all duration-200 group">
                     <div>
@@ -185,7 +185,15 @@
                                 </div>
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                                <div>
+                                    <label for="homeCategoryFilter" class="block text-xs font-medium text-slate-600 mb-1">การประเมิน</label>
+                                    <select id="homeCategoryFilter" name="homeCategory" onchange="filterData()" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-semibold text-slate-700">
+                                        <option value="">การประเมินทั้งหมด</option>
+                                        <option value="Textbook">Textbook</option>
+                                        <option value="eBook">eBook</option>
+                                    </select>
+                                </div>
                                 <div>
                                     <label for="homeYearFilter" class="block text-xs font-medium text-slate-600 mb-1">ปีที่ทำการประเมิน</label>
                                     <select id="homeYearFilter" name="homeYear" onchange="filterData()" class="w-full py-2.5 px-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
@@ -225,9 +233,8 @@
                 <div class="p-5 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div>
                         <h3 class="font-bold text-base text-slate-800">ตารางสถานะการประเมิน</h3>
-                        <p class="text-xs text-slate-400">แสดงผลรายการหนังสือ/ตำราเรียน</p>
+                        <p class="text-xs text-slate-400">แสดงผลรายการหนังสือ/ตำราเรียน และ eBook</p>
                     </div>
-                    <!-- ซ่อนปุ่มรีเฟรชและจำนวนรายการบน Mobile ( hidden sm:flex ) -->
                     <div class="hidden sm:flex items-center space-x-3">
                         <button type="button" onclick="fetchEvaluations()" class="px-3.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-medium rounded-xl flex items-center space-x-1.5 transition-colors">
                             <i class="fa-solid fa-arrows-rotate"></i>
@@ -272,14 +279,18 @@
                         <h2 class="text-2xl sm:text-3xl font-bold">จัดการข้อมูลการประเมิน</h2>
                         <p class="text-xs sm:text-sm text-slate-400 mt-1">เพิ่ม แก้ไข ลบ อัปเดตสถานะ และดาวน์โหลดไฟล์เอกสาร</p>
                     </div>
-                    <div class="grid grid-cols-2 sm:flex sm:items-center gap-3 w-full sm:w-auto">
+                    <div class="grid grid-cols-1 sm:flex sm:items-center gap-3 w-full sm:w-auto">
                         <button type="button" onclick="exportToCSV()" class="w-full sm:w-auto justify-center px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold rounded-xl shadow-lg shadow-emerald-600/30 flex items-center space-x-2 transition-all">
                             <i class="fa-solid fa-file-csv text-sm"></i>
                             <span>ส่งออก CSV</span>
                         </button>
-                        <button type="button" onclick="openAddModal()" class="w-full sm:w-auto justify-center px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-xl shadow-lg shadow-blue-600/30 flex items-center space-x-2 transition-all">
+                        <button type="button" onclick="openAddModal('Textbook')" class="w-full sm:w-auto justify-center px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-xl shadow-lg shadow-blue-600/30 flex items-center space-x-2 transition-all">
                             <i class="fa-solid fa-plus text-sm"></i>
                             <span>เพิ่มผลงานใหม่</span>
+                        </button>
+                        <button type="button" onclick="openAddModal('eBook')" class="w-full sm:w-auto justify-center px-5 py-2.5 bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold rounded-xl shadow-lg shadow-purple-600/30 flex items-center space-x-2 transition-all">
+                            <i class="fa-solid fa-tablet-screen-button text-sm"></i>
+                            <span>เพิ่ม eBook</span>
                         </button>
                     </div>
                 </div>
@@ -357,7 +368,7 @@
                             Teacher Dashboard
                         </span>
                         <h2 class="text-2xl sm:text-3xl font-bold">เอกสารการประเมินของคุณ</h2>
-                        <p class="text-xs sm:text-sm text-slate-300 mt-1">แสดงข้อมูลหนังสือ/ตำราเรียนที่อยู่ในระบบ</p>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-1">แสดงข้อมูลหนังสือ/ตำราเรียน และ eBook ที่อยู่ในระบบ</p>
                     </div>
                     <div class="bg-white/10 backdrop-blur-md border border-white/20 px-4 py-3 rounded-2xl flex items-center space-x-3">
                         <div class="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center font-bold text-white">
@@ -509,7 +520,7 @@
             </button>
 
             <div class="flex items-center space-x-3 border-b border-slate-100 pb-4 mb-6">
-                <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center font-bold">
+                <div class="w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center font-bold" id="formModalHeaderIcon">
                     <i class="fa-solid fa-file-circle-plus"></i>
                 </div>
                 <div>
@@ -520,6 +531,7 @@
 
             <form onsubmit="handleFormSubmit(event)" autocomplete="off" class="space-y-6">
                 <input type="hidden" id="formEditId" name="id">
+                <input type="hidden" id="formTargetTable" name="targetTable" value="evaluation">
 
                 <div class="bg-slate-50/80 p-4 rounded-2xl border border-slate-200/80 space-y-4">
                     <h4 class="font-bold text-sm text-blue-700 flex items-center">
@@ -549,6 +561,7 @@
                                 <option value="" disabled selected>เลือกประเภท</option>
                                 <option value="หนังสือ">หนังสือ</option>
                                 <option value="ตำราเรียน">ตำราเรียน</option>
+                                <option value="eBook">eBook</option>
                             </select>
                         </div>
                     </div>
@@ -562,7 +575,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <div>
                             <label for="formBookCode" class="block text-xs font-medium text-slate-700 mb-1">รหัสหนังสือ *</label>
-                            <input type="text" id="formBookCode" name="book_code" required autocomplete="off" placeholder="เช่น Text-029" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
+                            <input type="text" id="formBookCode" name="book_code" required autocomplete="off" placeholder="เช่น Text-029 หรือ eBook-001" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
                         </div>
                         <div>
                             <label for="formDepartment" class="block text-xs font-medium text-slate-700 mb-1">ภาควิชา *</label>
@@ -570,7 +583,7 @@
                         </div>
                         <div class="sm:col-span-2">
                             <label for="formTitle" class="block text-xs font-medium text-slate-700 mb-1">ชื่อเรื่อง *</label>
-                            <input type="text" id="formTitle" name="title" required autocomplete="off" placeholder="ชื่อเรื่องหนังสือ/ตำราเรียน" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
+                            <input type="text" id="formTitle" name="title" required autocomplete="off" placeholder="ชื่อเรื่องหนังสือ/ตำราเรียน/eBook" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
                         </div>
                         <div>
                             <label for="formEvalStatus" class="block text-xs font-medium text-slate-700 mb-1">สถานะการประเมิน *</label>
@@ -596,7 +609,7 @@
                             </select>
                         </div>
                         <div>
-                            <label for="formPubStatus" class="block text-xs font-medium text-slate-700 mb-1">สถานะการจัดพิมพ์ *</label>
+                            <label for="formPubStatus" class="block text-xs font-medium text-slate-700 mb-1">สถานะการจัดพิมพ์/จัดทำ *</label>
                             <select id="formPubStatus" name="publication_status" required class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
                                 <option value="" disabled selected>เลือกสถานะ</option>
                                 <option value="อยู่ระหว่างการประเมิน">อยู่ระหว่างการประเมิน</option>
@@ -605,10 +618,11 @@
                                 <option value="นำไปจัดพิมพ์ได้">นำไปจัดพิมพ์ได้</option>
                                 <option value="นำไปจัดพิมพ์ไม่ได้">นำไปจัดพิมพ์ไม่ได้</option>
                                 <option value="จัดพิมพ์เอง">จัดพิมพ์เอง</option>
+                                <option value="พร้อมขึ้นระบบ eBook">พร้อมขึ้นระบบ eBook</option>
                             </select>
                         </div>
                         <div>
-                            <label for="formIsbn" class="block text-xs font-medium text-slate-700 mb-1">เลข ISBN</label>
+                            <label for="formIsbn" class="block text-xs font-medium text-slate-700 mb-1">เลข ISBN / e-ISBN</label>
                             <input type="text" id="formIsbn" name="isbn" autocomplete="off" placeholder="978-xxx-xxx-xxx-x" class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
                         </div>
                         <div>
@@ -635,11 +649,11 @@
 
                     <div class="space-y-3">
                         <div>
-                            <label for="formFileOriginal" class="block text-xs font-medium text-slate-700 mb-1">หนังสือต้นฉบับ (URL)</label>
+                            <label for="formFileOriginal" class="block text-xs font-medium text-slate-700 mb-1">หนังสือ/eBook ต้นฉบับ (URL)</label>
                             <input type="url" id="formFileOriginal" name="file_original_url" autocomplete="off" placeholder="https://drive.google.com/..." class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
                         </div>
                         <div>
-                            <label for="formFileCover" class="block text-xs font-medium text-slate-700 mb-1">ปกหนังสือ (URL)</label>
+                            <label for="formFileCover" class="block text-xs font-medium text-slate-700 mb-1">ปกหนังสือ/eBook (URL)</label>
                             <input type="url" id="formFileCover" name="file_cover_url" autocomplete="off" placeholder="https://drive.google.com/..." class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
                         </div>
                         <div>
@@ -672,6 +686,9 @@
                 <div class="flex items-center space-x-3">
                     <span id="popupBookCode" class="px-3 py-1 bg-sky-100 text-sky-600 font-bold rounded-full text-xs sm:text-sm">
                         Text-000
+                    </span>
+                    <span id="popupCategoryBadge" class="px-3 py-1 bg-purple-100 text-purple-600 font-bold rounded-full text-xs sm:text-sm">
+                        Textbook
                     </span>
                     <span class="text-xs sm:text-sm text-slate-400 font-medium flex items-center space-x-1.5">
                         <i class="fa-regular fa-copy"></i>
@@ -752,6 +769,7 @@
             <h3 class="text-lg font-bold text-slate-800">ยืนยันการลบข้อมูล</h3>
             <p class="text-xs text-slate-500 mt-2 mb-6">คุณแน่ใจหรือไม่ว่าต้องการลบผลงานนี้ออกจากระบบ? การดำเนินการนี้ไม่สามารถย้อนกลับได้</p>
             <input type="hidden" id="deleteTargetId" name="deleteTargetId">
+            <input type="hidden" id="deleteTargetTable" name="deleteTargetTable" value="evaluation">
             <div class="flex items-center justify-center space-x-3">
                 <button type="button" onclick="closeModal('deleteModal')" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl">
                     ยกเลิก
@@ -786,7 +804,6 @@
         let supabaseClient = null;
         function initSupabase() {
             if (!supabaseClient && window.supabase) {
-                // บังคับใช้ sessionStorage เพื่อให้ระบบเคลียร์ Session ทันทีที่ปิดเบราว์เซอร์/ปิดแท็บ
                 supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
                     auth: {
                         storage: window.sessionStorage,
@@ -798,7 +815,6 @@
             return supabaseClient;
         }
 
-        // Helper: ตรวจสอบสิทธิ์ระดับ Client-Side Guard
         function isStaffAuthenticated() {
             return currentUser && currentUser.role === 'staff';
         }
@@ -1086,7 +1102,6 @@
         }
 
         function selectLoginRole(role) {
-            // ป้องกันการเลือกบทบาทเจ้าหน้าที่ เมื่ออยู่ในหน้าสมัครสมาชิก
             if (currentAuthMode === 'signup' && role === 'staff') {
                 return;
             }
@@ -1167,7 +1182,6 @@
                 if (subActions) subActions.classList.add('hidden');
                 if (backContainer) backContainer.classList.remove('hidden');
 
-                // ล็อกปุ่มเจ้าหน้าที่เฉพาะหน้าสมัครสมาชิกใหม่
                 selectLoginRole('teacher');
                 if (btnStaff) {
                     btnStaff.disabled = true;
@@ -1255,7 +1269,6 @@
                     showToast(`เข้าสู่ระบบสำเร็จ (${currentUser.email})`);
 
                 } else if (currentAuthMode === 'signup') {
-                    // ป้องกันการส่งข้อมูลไปยัง Supabase ในบทบาทเจ้าหน้าที่อย่างเด็ดขาด
                     if (currentRoleSelection === 'staff') {
                         throw new Error('ระบบปิดรับสมัครสมาชิกในบทบาทเจ้าหน้าที่');
                     }
@@ -1335,13 +1348,27 @@
                 return;
             }
             try {
-                const { data, error } = await client
-                    .from('evaluation')
-                    .select('*');
+                const [resTextbook, resEbook] = await Promise.all([
+                    client.from('evaluation').select('*'),
+                    client.from('ebook_evaluation').select('*')
+                ]);
 
-                if (error) throw error;
+                if (resTextbook.error) throw resTextbook.error;
+                if (resEbook.error) throw resEbook.error;
 
-                evaluationsData = data || [];
+                const textbooks = (resTextbook.data || []).map(item => ({
+                    ...item,
+                    category: 'Textbook',
+                    targetTable: 'evaluation'
+                }));
+
+                const ebooks = (resEbook.data || []).map(item => ({
+                    ...item,
+                    category: 'eBook',
+                    targetTable: 'ebook_evaluation'
+                }));
+
+                evaluationsData = [...textbooks, ...ebooks];
                 updateUI();
                 showToast('อัปเดตข้อมูลล่าสุดจาก Supabase แล้ว');
             } catch (err) {
@@ -1449,6 +1476,7 @@
 
         function filterData() {
             const search = (document.getElementById('homeSearchInput')?.value || '').toLowerCase();
+            const category = document.getElementById('homeCategoryFilter')?.value || '';
             const year = document.getElementById('homeYearFilter')?.value || '';
             const dept = document.getElementById('homeDeptFilter')?.value || '';
             const status = document.getElementById('homeStatusFilter')?.value || '';
@@ -1461,19 +1489,20 @@
                     (item.isbn && item.isbn.toLowerCase().includes(search)) ||
                     (item.vps_no && item.vps_no.toLowerCase().includes(search));
 
+                const matchCategory = !category || item.category === category;
                 const matchYear = !year || String(item.evaluation_year) === String(year);
                 const matchDept = !dept || item.department === dept;
                 
                 let matchStatus = true;
                 if (status === 'ผ่านการประเมิน') {
-                    matchStatus = item.evaluation_status === 'ผ่านการประเมิน';
+                    matchStatus = item.evaluation_status === 'ผ่านการประเมิน' || item.evaluation_status === 'จัดจำหน่ายผ่าน SE-ED' || item.publication_status === 'ดำเนินการสำเร็จ';
                 } else if (status === 'ไม่ผ่านการประเมิน') {
                     matchStatus = item.evaluation_status === 'ไม่ผ่านการประเมิน';
                 } else if (status === 'กำลังดำเนินการประเมิน') {
-                    matchStatus = item.evaluation_status !== 'ผ่านการประเมิน' && item.evaluation_status !== 'ไม่ผ่านการประเมิน';
+                    matchStatus = item.evaluation_status !== 'ผ่านการประเมิน' && item.evaluation_status !== 'จัดจำหน่ายผ่าน SE-ED' && item.evaluation_status !== 'ไม่ผ่านการประเมิน' && item.publication_status !== 'ดำเนินการสำเร็จ';
                 }
 
-                return matchSearch && matchYear && matchDept && matchStatus;
+                return matchSearch && matchCategory && matchYear && matchDept && matchStatus;
             });
 
             filteredData = sortByBookCodeDesc(rawFiltered);
@@ -1539,7 +1568,7 @@
 
         function renderKPIs() {
             const total = evaluationsData.length;
-            const passed = evaluationsData.filter(i => i.evaluation_status === 'ผ่านการประเมิน').length;
+            const passed = evaluationsData.filter(i => i.evaluation_status === 'ผ่านการประเมิน' || i.evaluation_status === 'จัดจำหน่ายผ่าน SE-ED' || i.publication_status === 'ดำเนินการสำเร็จ').length;
             const failed = evaluationsData.filter(i => i.evaluation_status === 'ไม่ผ่านการประเมิน').length;
             const pending = total - (passed + failed);
 
@@ -1568,7 +1597,7 @@
             const chartCanvas = document.getElementById('statusChart');
             if (!chartCanvas || typeof Chart === 'undefined') return;
 
-            const passed = evaluationsData.filter(i => i.evaluation_status === 'ผ่านการประเมิน').length;
+            const passed = evaluationsData.filter(i => i.evaluation_status === 'ผ่านการประเมิน' || i.evaluation_status === 'จัดจำหน่ายผ่าน SE-ED' || i.publication_status === 'ดำเนินการสำเร็จ').length;
             const failed = evaluationsData.filter(i => i.evaluation_status === 'ไม่ผ่านการประเมิน').length;
             const pending = evaluationsData.length - (passed + failed);
 
@@ -1624,11 +1653,13 @@
 
         function applyQuickFilter(type) {
             const searchInput = document.getElementById('homeSearchInput');
+            const categoryFilter = document.getElementById('homeCategoryFilter');
             const yearFilter = document.getElementById('homeYearFilter');
             const deptFilter = document.getElementById('homeDeptFilter');
             const statusFilter = document.getElementById('homeStatusFilter');
 
             if (searchInput) searchInput.value = '';
+            if (categoryFilter) categoryFilter.value = '';
             if (yearFilter) yearFilter.value = '';
             if (deptFilter) deptFilter.value = '';
 
@@ -1648,11 +1679,13 @@
 
         function resetHomeFilters() {
             const searchInput = document.getElementById('homeSearchInput');
+            const categoryFilter = document.getElementById('homeCategoryFilter');
             const yearFilter = document.getElementById('homeYearFilter');
             const deptFilter = document.getElementById('homeDeptFilter');
             const statusFilter = document.getElementById('homeStatusFilter');
 
             if (searchInput) searchInput.value = '';
+            if (categoryFilter) categoryFilter.value = '';
             if (yearFilter) yearFilter.value = '';
             if (deptFilter) deptFilter.value = '';
             if (statusFilter) statusFilter.value = '';
@@ -1661,13 +1694,20 @@
 
         function getStatusBadge(status) {
             if (!status) return `<span class="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-full text-xs font-semibold whitespace-nowrap inline-flex items-center space-x-1"><i class="fa-solid fa-minus text-[10px]"></i><span>ไม่ระบุ</span></span>`;
-            if (status === 'ผ่านการประเมิน') {
-                return `<span class="px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-semibold inline-flex items-center space-x-1 whitespace-nowrap"><i class="fa-solid fa-circle-check text-[10px]"></i><span>ผ่านการประเมิน</span></span>`;
+            if (status === 'ผ่านการประเมิน' || status === 'จัดจำหน่ายผ่าน SE-ED' || status === 'ดำเนินการสำเร็จ') {
+                return `<span class="px-2.5 py-1 bg-emerald-100 text-emerald-700 rounded-full text-xs font-semibold inline-flex items-center space-x-1 whitespace-nowrap"><i class="fa-solid fa-circle-check text-[10px]"></i><span>${escapeHtml(status)}</span></span>`;
             }
             if (status === 'ไม่ผ่านการประเมิน') {
                 return `<span class="px-2.5 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-semibold inline-flex items-center space-x-1 whitespace-nowrap"><i class="fa-solid fa-circle-xmark text-[10px]"></i><span>ไม่ผ่านการประเมิน</span></span>`;
             }
             return `<span class="px-2.5 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-semibold inline-flex items-center space-x-1 whitespace-nowrap"><i class="fa-solid fa-hourglass-half text-[10px]"></i><span class="whitespace-nowrap">${escapeHtml(status)}</span></span>`;
+        }
+
+        function getCategoryBadge(category) {
+            if (category === 'eBook') {
+                return `<span class="px-2 py-0.5 bg-purple-100 text-purple-700 font-bold rounded-md text-[10px] uppercase tracking-wider inline-block">eBook</span>`;
+            }
+            return `<span class="px-2 py-0.5 bg-blue-100 text-blue-700 font-bold rounded-md text-[10px] uppercase tracking-wider inline-block">Textbook</span>`;
         }
 
         function getMobileStatusBadge(status) {
@@ -1707,15 +1747,16 @@
 
                     return `
                     <tr class="hover:bg-slate-50/80 transition-colors">
-                        <td class="py-4 px-4 font-bold text-blue-600 font-mono text-xs align-top cursor-pointer hover:underline whitespace-nowrap" onclick="openDetailModal(${item.id})">
+                        <td class="py-4 px-4 font-bold text-blue-600 font-mono text-xs align-top cursor-pointer hover:underline whitespace-nowrap" onclick="openDetailModal(${item.id}, '${item.targetTable}')">
                             ${escapeHtml(item.book_code) || '-'}
                         </td>
-                        <td class="py-4 px-4 align-top cursor-pointer whitespace-nowrap" onclick="openDetailModal(${item.id})">
+                        <td class="py-4 px-4 align-top cursor-pointer whitespace-nowrap" onclick="openDetailModal(${item.id}, '${item.targetTable}')">
                             ${getStatusBadge(item.evaluation_status)}
                         </td>
-                        <td class="py-4 px-4 align-top cursor-pointer group" onclick="openDetailModal(${item.id})">
+                        <td class="py-4 px-4 align-top cursor-pointer group" onclick="openDetailModal(${item.id}, '${item.targetTable}')">
                             <div class="space-y-2">
                                 <div class="flex items-center space-x-2.5 flex-wrap gap-y-1">
+                                    ${getCategoryBadge(item.category)}
                                     <span class="font-bold text-slate-900 text-base leading-snug group-hover:text-blue-600 transition-colors">
                                         ${escapeHtml(item.title) || '-'}
                                     </span>
@@ -1761,10 +1802,13 @@
                     const authorFull = escapeHtml(`${item.academic_position || ''} ${item.author_name || ''}`.trim());
 
                     return `
-                    <div onclick="openDetailModal(${item.id})" class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/80 flex flex-col items-center text-center space-y-3.5 transition-all cursor-pointer hover:shadow-md active:scale-[0.99]">
-                        <div class="w-full bg-slate-100/90 border border-slate-200/70 py-2 px-3 rounded-xl text-xs font-bold text-slate-700 tracking-tight flex items-center justify-center space-x-2">
-                            <i class="fa-solid fa-circle-info text-blue-500 text-xs"></i>
-                            <span>รายละเอียดการประเมิน</span>
+                    <div onclick="openDetailModal(${item.id}, '${item.targetTable}')" class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/80 flex flex-col items-center text-center space-y-3.5 transition-all cursor-pointer hover:shadow-md active:scale-[0.99]">
+                        <div class="w-full bg-slate-100/90 border border-slate-200/70 py-2 px-3 rounded-xl text-xs font-bold text-slate-700 tracking-tight flex items-center justify-between">
+                            <span class="flex items-center space-x-1">
+                                <i class="fa-solid fa-circle-info text-blue-500 text-xs"></i>
+                                <span>รายละเอียดการประเมิน</span>
+                            </span>
+                            ${getCategoryBadge(item.category)}
                         </div>
 
                         ${item.book_code ? `
@@ -1816,7 +1860,43 @@
             renderPaginationControls('homePagination', homeCurrentPage, filteredData.length, 'changeHomePage');
         }
 
-        function getEvaluationStepInfo(status) {
+        function getEvaluationStepInfo(status, category = 'Textbook') {
+            if (category === 'eBook') {
+                const steps = [
+                    { id: 1, title: 'จดลิขสิทธิ์', icon: 'fa-file-shield' },
+                    { id: 2, title: 'ส่ง e-Office (Kris)', icon: 'fa-paper-plane' },
+                    { id: 3, title: 'ตรวจลิขสิทธิ์', icon: 'fa-file-circle-check' },
+                    { id: 4, title: 'ขอ e-ISBN', icon: 'fa-barcode' },
+                    { id: 5, title: 'ส่ง e-Office (KLLC)', icon: 'fa-paper-plane' },
+                    { id: 6, title: 'SE-ED', icon: 'fa-cart-shopping' }
+                ];
+
+                let activeStepIndex = 1;
+
+                if (status === 'รับเอกสารจดแจ้งลิขสิทธิ์' || status === 'เตรียมเอกสารจดแจ้งลิขสิทธิ์') {
+                    activeStepIndex = 1;
+                } else if (status === 'ส่ง e-Office (Kris)') {
+                    activeStepIndex = 2;
+                } else if (status === 'รับผลตรวจลิขสิทธิ์' || status === 'แจ้งผลการจดแจ้งลิขสิทธิ์') {
+                    activeStepIndex = 3;
+                } else if (status === 'ขอรหัส e-ISBN' || status === 'เตรียมเอกสารทำ eBook') {
+                    activeStepIndex = 4;
+                } else if (status === 'ส่ง e-Office (KLLC)') {
+                    activeStepIndex = 5;
+                } else if (status === 'จัดจำหน่ายผ่าน SE-ED') {
+                    activeStepIndex = 6;
+                } else {
+                    activeStepIndex = 1;
+                }
+
+                const percentageMap = { 1: 15, 2: 35, 3: 50, 4: 70, 5: 85, 6: 100 };
+                return {
+                    steps,
+                    activeStepIndex,
+                    percentage: percentageMap[activeStepIndex] || 0
+                };
+            }
+
             const steps = [
                 { id: 1, title: 'ยื่นคำขอ', icon: 'fa-pencil' },
                 { id: 2, title: 'กรรมการคณะฯ', icon: 'fa-users-gear' },
@@ -1857,11 +1937,16 @@
             };
         }
 
-        function openDetailModal(id) {
-            const item = evaluationsData.find(e => e.id === id);
+        function openDetailModal(id, targetTable = 'evaluation') {
+            const item = evaluationsData.find(e => e.id === id && e.targetTable === targetTable);
             if (!item) return;
 
             document.getElementById('popupBookCode').innerText = item.book_code || 'N/A';
+            document.getElementById('popupCategoryBadge').innerText = item.category || 'Textbook';
+            document.getElementById('popupCategoryBadge').className = item.category === 'eBook'
+                ? 'px-3 py-1 bg-purple-100 text-purple-600 font-bold rounded-full text-xs sm:text-sm'
+                : 'px-3 py-1 bg-sky-100 text-sky-600 font-bold rounded-full text-xs sm:text-sm';
+
             document.getElementById('popupYear').innerText = `ปีประเมิน: ${item.evaluation_year || '-'}`;
             document.getElementById('popupTitle').innerText = item.title || '-';
             document.getElementById('popupAuthor').innerText = `ผู้เขียน: ${item.academic_position || ''} ${item.author_name || '-'}`.trim();
@@ -1870,7 +1955,7 @@
             document.getElementById('popupEvalBadge').innerHTML = getStatusBadge(item.evaluation_status);
             document.getElementById('popupPubStatus').innerHTML = getPublicationStatusBadge(item.publication_status);
 
-            const stepInfo = getEvaluationStepInfo(item.evaluation_status);
+            const stepInfo = getEvaluationStepInfo(item.evaluation_status, item.category);
             document.getElementById('popupProgressText').innerText = `${stepInfo.percentage}%`;
 
             const container = document.getElementById('popupFlowStepsContainer');
@@ -1904,8 +1989,8 @@
             const disabledClass = "inline-flex items-center justify-center w-8 h-8 rounded-lg bg-slate-100 text-slate-300 border border-slate-200 cursor-not-allowed pointer-events-none";
 
             const origBtn = origUrl 
-                ? `<a href="${origUrl}" target="_blank" rel="noopener noreferrer" title="หนังสือต้นฉบับ" class="${activeClass} bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white border-blue-200"><i class="fa-solid fa-file-lines text-xs"></i></a>`
-                : `<span title="ไม่มีหนังสือต้นฉบับ" class="${disabledClass}"><i class="fa-solid fa-file-lines text-xs"></i></span>`;
+                ? `<a href="${origUrl}" target="_blank" rel="noopener noreferrer" title="ต้นฉบับ" class="${activeClass} bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white border-blue-200"><i class="fa-solid fa-file-lines text-xs"></i></a>`
+                : `<span title="ไม่มีต้นฉบับ" class="${disabledClass}"><i class="fa-solid fa-file-lines text-xs"></i></span>`;
 
             const coverBtn = coverUrl 
                 ? `<a href="${coverUrl}" target="_blank" rel="noopener noreferrer" title="ปกหนังสือ" class="${activeClass} bg-amber-50 text-amber-600 hover:bg-amber-500 hover:text-white border-amber-200"><i class="fa-solid fa-image text-xs"></i></a>`
@@ -1950,6 +2035,7 @@
                         <td class="py-4 px-4 align-top">
                             <div class="space-y-2">
                                 <div class="flex items-center space-x-2.5 flex-wrap gap-y-1">
+                                    ${getCategoryBadge(item.category)}
                                     <span class="font-bold text-slate-900 text-base leading-snug">
                                         ${escapeHtml(item.title) || '-'}
                                     </span>
@@ -1984,10 +2070,10 @@
                         </td>
                         <td class="py-4 px-4 align-top text-center whitespace-nowrap">
                             <div class="flex items-center justify-center space-x-1.5">
-                                <button type="button" onclick="openEditModal(${item.id})" title="แก้ไข" class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white border border-blue-200 transition-colors flex items-center justify-center">
+                                <button type="button" onclick="openEditModal(${item.id}, '${item.targetTable}')" title="แก้ไข" class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white border border-blue-200 transition-colors flex items-center justify-center">
                                     <i class="fa-solid fa-pen-to-square text-xs"></i>
                                 </button>
-                                <button type="button" onclick="openDeleteModal(${item.id})" title="ลบ" class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white border border-rose-200 transition-colors flex items-center justify-center">
+                                <button type="button" onclick="openDeleteModal(${item.id}, '${item.targetTable}')" title="ลบ" class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white border border-rose-200 transition-colors flex items-center justify-center">
                                     <i class="fa-solid fa-trash-can text-xs"></i>
                                 </button>
                             </div>
@@ -2002,11 +2088,14 @@
 
                     return `
                     <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/80 flex flex-col items-center text-center space-y-3.5 transition-all hover:shadow-md">
-                        ${item.book_code ? `
-                            <span class="px-3 py-1 bg-blue-50 text-blue-600 border border-blue-200/60 rounded-full text-xs font-bold font-mono tracking-wide">
-                                ${escapeHtml(item.book_code)}
-                            </span>
-                        ` : ''}
+                        <div class="w-full flex items-center justify-between">
+                            ${item.book_code ? `
+                                <span class="px-3 py-1 bg-blue-50 text-blue-600 border border-blue-200/60 rounded-full text-xs font-bold font-mono tracking-wide">
+                                    ${escapeHtml(item.book_code)}
+                                </span>
+                            ` : '<span></span>'}
+                            ${getCategoryBadge(item.category)}
+                        </div>
 
                         <h3 class="text-base font-bold text-slate-900 leading-snug px-2">
                             ${escapeHtml(item.title) || '-'}
@@ -2042,10 +2131,10 @@
                             ${renderFileIcons(item)}
                             <div class="h-5 w-[1px] bg-slate-200"></div>
                             <div class="flex items-center space-x-1.5">
-                                <button type="button" onclick="openEditModal(${item.id})" title="แก้ไข" class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 border border-blue-200 flex items-center justify-center">
+                                <button type="button" onclick="openEditModal(${item.id}, '${item.targetTable}')" title="แก้ไข" class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 border border-blue-200 flex items-center justify-center">
                                     <i class="fa-solid fa-pen-to-square text-xs"></i>
                                 </button>
-                                <button type="button" onclick="openDeleteModal(${item.id})" title="ลบ" class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 border border-rose-200 flex items-center justify-center">
+                                <button type="button" onclick="openDeleteModal(${item.id}, '${item.targetTable}')" title="ลบ" class="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 border border-rose-200 flex items-center justify-center">
                                     <i class="fa-solid fa-trash-can text-xs"></i>
                                 </button>
                             </div>
@@ -2081,15 +2170,16 @@
 
                     return `
                     <tr class="hover:bg-slate-50/80 transition-colors">
-                        <td class="py-4 px-4 font-bold text-blue-600 font-mono text-xs align-top cursor-pointer hover:underline whitespace-nowrap" onclick="openDetailModal(${item.id})">
+                        <td class="py-4 px-4 font-bold text-blue-600 font-mono text-xs align-top cursor-pointer hover:underline whitespace-nowrap" onclick="openDetailModal(${item.id}, '${item.targetTable}')">
                             ${escapeHtml(item.book_code) || '-'}
                         </td>
-                        <td class="py-4 px-4 align-top cursor-pointer whitespace-nowrap" onclick="openDetailModal(${item.id})">
+                        <td class="py-4 px-4 align-top cursor-pointer whitespace-nowrap" onclick="openDetailModal(${item.id}, '${item.targetTable}')">
                             ${getStatusBadge(item.evaluation_status)}
                         </td>
-                        <td class="py-4 px-4 align-top cursor-pointer group" onclick="openDetailModal(${item.id})">
+                        <td class="py-4 px-4 align-top cursor-pointer group" onclick="openDetailModal(${item.id}, '${item.targetTable}')">
                             <div class="space-y-2">
                                 <div class="flex items-center space-x-2.5 flex-wrap gap-y-1">
+                                    ${getCategoryBadge(item.category)}
                                     <span class="font-bold text-slate-900 text-base leading-snug group-hover:text-blue-600 transition-colors">
                                         ${escapeHtml(item.title) || '-'}
                                     </span>
@@ -2131,10 +2221,13 @@
                     const authorFull = escapeHtml(`${item.academic_position || ''} ${item.author_name || ''}`.trim());
 
                     return `
-                    <div onclick="openDetailModal(${item.id})" class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/80 flex flex-col items-center text-center space-y-3.5 transition-all cursor-pointer hover:shadow-md active:scale-[0.99]">
-                        <div class="w-full bg-slate-100/90 border border-slate-200/70 py-2 px-3 rounded-xl text-xs font-bold text-slate-700 tracking-tight flex items-center justify-center space-x-2">
-                            <i class="fa-solid fa-circle-info text-blue-500 text-xs"></i>
-                            <span>รายละเอียดการประเมิน</span>
+                    <div onclick="openDetailModal(${item.id}, '${item.targetTable}')" class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/80 flex flex-col items-center text-center space-y-3.5 transition-all cursor-pointer hover:shadow-md active:scale-[0.99]">
+                        <div class="w-full bg-slate-100/90 border border-slate-200/70 py-2 px-3 rounded-xl text-xs font-bold text-slate-700 tracking-tight flex items-center justify-between">
+                            <span class="flex items-center space-x-1">
+                                <i class="fa-solid fa-circle-info text-blue-500 text-xs"></i>
+                                <span>รายละเอียดการประเมิน</span>
+                            </span>
+                            ${getCategoryBadge(item.category)}
                         </div>
 
                         ${item.book_code ? `
@@ -2184,7 +2277,88 @@
             renderPaginationControls('teacherPagination', teacherCurrentPage, teacherFilteredData.length, 'changeTeacherPage');
         }
 
-        function openAddModal() {
+        // ฟังก์ชันสลับตัวเลือกของ "สถานะการประเมิน" และ "สถานะการจัดพิมพ์/จัดทำ" Dynamic ตามประเภทผลงาน
+        function setFormDropdownOptions(type = 'Textbook', selectedEvalStatus = '', selectedPubStatus = '') {
+            const evalSelect = document.getElementById('formEvalStatus');
+            const pubSelect = document.getElementById('formPubStatus');
+
+            // 1. ตัวเลือกสถานะการประเมิน
+            let evalOptions = [];
+            if (type === 'eBook') {
+                evalOptions = [
+                    'รับเอกสารจดแจ้งลิขสิทธิ์',
+                    'เตรียมเอกสารจดแจ้งลิขสิทธิ์',
+                    'ส่ง e-Office (Kris)',
+                    'รับผลตรวจลิขสิทธิ์',
+                    'แจ้งผลการจดแจ้งลิขสิทธิ์',
+                    'ขอรหัส e-ISBN',
+                    'เตรียมเอกสารทำ eBook',
+                    'ส่ง e-Office (KLLC)',
+                    'จัดจำหน่ายผ่าน SE-ED'
+                ];
+            } else {
+                evalOptions = [
+                    'รับเอกสารการประเมิน',
+                    'สรรหาผู้ทรงคุณวุฒิ',
+                    'เข้ากรรมการคณะ',
+                    'ส่งเอกสารผู้ทรง รอบ 1',
+                    'ติดตามผล รอบ 1',
+                    'รับเอกสารผู้ทรง รอบ 1',
+                    'ส่งเอกสารผู้ประเมิน รอบ 1',
+                    'รอการแก้ไข รอบ 1',
+                    'ส่งเอกสารผู้ทรง รอบ 2',
+                    'ติดตามผล รอบ 2',
+                    'รับเอกสารผู้ทรง รอบ 2',
+                    'ส่งเอกสารผู้ประเมิน รอบ 2',
+                    'รอการแก้ไข รอบ 2',
+                    'สรุปผลการประเมิน',
+                    'เข้ากรรมการคณะสรุปผล',
+                    'ผ่านการประเมิน',
+                    'ไม่ผ่านการประเมิน'
+                ];
+            }
+
+            if (evalSelect) {
+                let htmlEval = `<option value="" disabled ${!selectedEvalStatus ? 'selected' : ''}>เลือกสถานะ</option>`;
+                evalOptions.forEach(opt => {
+                    const isSel = String(selectedEvalStatus) === String(opt) ? 'selected' : '';
+                    htmlEval += `<option value="${escapeHtml(opt)}" ${isSel}>${escapeHtml(opt)}</option>`;
+                });
+                evalSelect.innerHTML = htmlEval;
+            }
+
+            // 2. ตัวเลือกสถานะการจัดพิมพ์/จัดทำ (ปรับปรุงตามที่ระบุ)
+            let pubOptions = [];
+            if (type === 'eBook') {
+                pubOptions = [
+                    'อยู่ระหว่างการส่งขอลิขสิทธิ์',
+                    'อยู่ระหว่างจัดทำ eBook',
+                    'ดำเนินการสำเร็จ'
+                ];
+            } else {
+                pubOptions = [
+                    'อยู่ระหว่างการประเมิน',
+                    'รอจัดพิมพ์',
+                    'กำลังจัดพิมพ์',
+                    'นำไปจัดพิมพ์ได้',
+                    'นำไปจัดพิมพ์ไม่ได้',
+                    'จัดพิมพ์เอง',
+                    'พร้อมขึ้นระบบ eBook'
+                ];
+            }
+
+            if (pubSelect) {
+                let htmlPub = `<option value="" disabled ${!selectedPubStatus ? 'selected' : ''}>เลือกสถานะ</option>`;
+                pubOptions.forEach(opt => {
+                    const isSel = String(selectedPubStatus) === String(opt) ? 'selected' : '';
+                    htmlPub += `<option value="${escapeHtml(opt)}" ${isSel}>${escapeHtml(opt)}</option>`;
+                });
+                pubSelect.innerHTML = htmlPub;
+            }
+        }
+
+        // เปิด Modal สั่งระบุว่าจะเพิ่ม Textbook หรือ eBook
+        function openAddModal(type = 'Textbook') {
             if (!isStaffAuthenticated()) {
                 showToast('คุณไม่มีสิทธิ์ในการทำรายการนี้', 'error');
                 return;
@@ -2192,36 +2366,50 @@
 
             const form = document.querySelector('#editModal form');
             if (form) form.reset();
-            const editId = document.getElementById('formEditId');
-            if (editId) editId.value = '';
-            
+
+            setFormDropdownOptions(type, '', '');
+
+            document.getElementById('formEditId').value = '';
             const modalTitle = document.getElementById('formModalTitle');
-            if (modalTitle) modalTitle.innerText = 'เพิ่มผลงานใหม่';
+            const iconContainer = document.getElementById('formModalHeaderIcon');
+
+            if (type === 'eBook') {
+                document.getElementById('formTargetTable').value = 'ebook_evaluation';
+                if (modalTitle) modalTitle.innerText = 'เพิ่ม eBook ใหม่';
+                if (iconContainer) iconContainer.className = 'w-10 h-10 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center font-bold';
+                document.getElementById('formWorkType').value = 'eBook';
+            } else {
+                document.getElementById('formTargetTable').value = 'evaluation';
+                if (modalTitle) modalTitle.innerText = 'เพิ่มผลงานใหม่ (Textbook)';
+                if (iconContainer) iconContainer.className = 'w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center font-bold';
+            }
 
             openModal('editModal');
         }
 
-        function openEditModal(id) {
+        function openEditModal(id, targetTable = 'evaluation') {
             if (!isStaffAuthenticated()) {
                 showToast('คุณไม่มีสิทธิ์ในการทำรายการนี้', 'error');
                 return;
             }
 
-            const item = evaluationsData.find(e => e.id === id);
+            const item = evaluationsData.find(e => e.id === id && e.targetTable === targetTable);
             if (!item) return;
 
+            const categoryType = item.targetTable === 'ebook_evaluation' || item.category === 'eBook' ? 'eBook' : 'Textbook';
+            setFormDropdownOptions(categoryType, item.evaluation_status || '', item.publication_status || '');
+
             document.getElementById('formEditId').value = item.id || '';
+            document.getElementById('formTargetTable').value = item.targetTable || 'evaluation';
             document.getElementById('formYear').value = item.evaluation_year || '';
             document.getElementById('formAcademicPos').value = item.academic_position || '';
             document.getElementById('formAuthorName').value = item.author_name || '';
             document.getElementById('formAuthorEmail').value = item.author_email || '';
-            document.getElementById('formWorkType').value = item.work_type || '';
+            document.getElementById('formWorkType').value = item.work_type || (item.category === 'eBook' ? 'eBook' : '');
 
             document.getElementById('formBookCode').value = item.book_code || '';
             document.getElementById('formDepartment').value = item.department || '';
             document.getElementById('formTitle').value = item.title || '';
-            document.getElementById('formEvalStatus').value = item.evaluation_status || '';
-            document.getElementById('formPubStatus').value = item.publication_status || '';
             document.getElementById('formIsbn').value = item.isbn || '';
             document.getElementById('formVpsNo').value = item.vps_no || '';
             document.getElementById('formNote').value = item.note || '';
@@ -2231,7 +2419,15 @@
             document.getElementById('formFileEvalReport').value = item.file_eval_report_url || '';
 
             const modalTitle = document.getElementById('formModalTitle');
-            if (modalTitle) modalTitle.innerText = 'แก้ไขข้อมูลผลงาน';
+            const iconContainer = document.getElementById('formModalHeaderIcon');
+
+            if (item.targetTable === 'ebook_evaluation') {
+                if (modalTitle) modalTitle.innerText = 'แก้ไขข้อมูล eBook';
+                if (iconContainer) iconContainer.className = 'w-10 h-10 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center font-bold';
+            } else {
+                if (modalTitle) modalTitle.innerText = 'แก้ไขข้อมูลผลงาน (Textbook)';
+                if (iconContainer) iconContainer.className = 'w-10 h-10 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center font-bold';
+            }
 
             openModal('editModal');
         }
@@ -2251,6 +2447,8 @@
             }
 
             const id = document.getElementById('formEditId').value;
+            const targetTable = document.getElementById('formTargetTable').value || 'evaluation';
+
             const payload = {
                 evaluation_year: parseInt(document.getElementById('formYear').value) || null,
                 academic_position: document.getElementById('formAcademicPos').value.trim(),
@@ -2275,7 +2473,7 @@
             try {
                 if (id) {
                     const { error } = await client
-                        .from('evaluation')
+                        .from(targetTable)
                         .update(payload)
                         .eq('id', id);
 
@@ -2283,11 +2481,11 @@
                     showToast('แก้ไขข้อมูลเรียบร้อยแล้ว');
                 } else {
                     const { error } = await client
-                        .from('evaluation')
+                        .from(targetTable)
                         .insert([payload]);
 
                     if (error) throw error;
-                    showToast('เพิ่มผลงานใหม่เรียบร้อยแล้ว');
+                    showToast('เพิ่มรายการใหม่เรียบร้อยแล้ว');
                 }
 
                 closeModal('editModal');
@@ -2298,13 +2496,14 @@
             }
         }
 
-        function openDeleteModal(id) {
+        function openDeleteModal(id, targetTable = 'evaluation') {
             if (!isStaffAuthenticated()) {
                 showToast('คุณไม่มีสิทธิ์ในการลบข้อมูล', 'error');
                 return;
             }
 
             document.getElementById('deleteTargetId').value = id;
+            document.getElementById('deleteTargetTable').value = targetTable;
             openModal('deleteModal');
         }
 
@@ -2316,11 +2515,13 @@
 
             const client = initSupabase();
             const id = document.getElementById('deleteTargetId').value;
+            const targetTable = document.getElementById('deleteTargetTable').value || 'evaluation';
+            
             if (!client || !id) return;
 
             try {
                 const { error } = await client
-                    .from('evaluation')
+                    .from(targetTable)
                     .delete()
                     .eq('id', id);
 
@@ -2354,8 +2555,9 @@
                 return;
             }
 
-            const headers = ['รหัสหนังสือ', 'ชื่อเรื่อง', 'ผู้เขียน', 'อีเมล', 'ภาควิชา', 'ปีประเมิน', 'สถานะประเมิน', 'สถานะจัดพิมพ์', 'ISBN'];
+            const headers = ['ประเภทการประเมิน', 'รหัสหนังสือ', 'ชื่อเรื่อง', 'ผู้เขียน', 'อีเมล', 'ภาควิชา', 'ปีประเมิน', 'สถานะประเมิน', 'สถานะจัดพิมพ์', 'ISBN'];
             const rows = evaluationsData.map(i => [
+                `"${i.category || 'Textbook'}"`,
                 `"${i.book_code || ''}"`,
                 `"${(i.title || '').replace(/"/g, '""')}"`,
                 `"${i.academic_position || ''} ${i.author_name || ''}"`,
