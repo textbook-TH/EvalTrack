@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="th">
 <head>
     <meta charset="UTF-8">
@@ -707,9 +707,6 @@
                 <div class="flex items-center space-x-3">
                     <span id="popupBookCode" class="px-3 py-1 bg-sky-100 text-sky-600 font-bold rounded-full text-xs sm:text-sm">
                         Text-000
-                    </span>
-                    <span id="popupCategoryBadge" class="px-3 py-1 bg-purple-100 text-purple-600 font-bold rounded-full text-xs sm:text-sm">
-                        Textbook
                     </span>
                     <span class="text-xs sm:text-sm text-slate-400 font-medium flex items-center space-x-1.5">
                         <i class="fa-regular fa-copy"></i>
@@ -1759,10 +1756,7 @@
         }
 
         function getCategoryBadge(category) {
-            if (category === 'eBook') {
-                return `<span class="px-2 py-0.5 bg-purple-100 text-purple-700 font-bold rounded-md text-[10px] uppercase tracking-wider inline-block">eBook</span>`;
-            }
-            return `<span class="px-2 py-0.5 bg-blue-100 text-blue-700 font-bold rounded-md text-[10px] uppercase tracking-wider inline-block">Textbook</span>`;
+            return '';
         }
 
         function getMobileStatusBadge(status) {
@@ -1811,7 +1805,6 @@
                         <td class="py-4 px-4 align-top cursor-pointer group" onclick="openDetailModal(${item.id}, '${item.targetTable}')">
                             <div class="space-y-2">
                                 <div class="flex items-center space-x-2.5 flex-wrap gap-y-1">
-                                    ${getCategoryBadge(item.category)}
                                     <span class="font-bold text-slate-900 text-base leading-snug group-hover:text-blue-600 transition-colors">
                                         ${escapeHtml(item.title) || '-'}
                                     </span>
@@ -1858,9 +1851,6 @@
 
                     return `
                     <div onclick="openDetailModal(${item.id}, '${item.targetTable}')" class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/80 flex flex-col items-center text-center space-y-3.5 transition-all cursor-pointer hover:shadow-md active:scale-[0.99]">
-                       <div class="w-full flex justify-end">
-                        ${getCategoryBadge(item.category)}
-                    </div>
                         ${item.book_code ? `
                             <span class="px-3 py-1 bg-blue-50 text-blue-600 border border-blue-200/60 rounded-full text-xs font-bold font-mono tracking-wide">
                                 ${escapeHtml(item.book_code)}
@@ -1992,10 +1982,6 @@
             if (!item) return;
 
             document.getElementById('popupBookCode').innerText = item.book_code || 'N/A';
-            document.getElementById('popupCategoryBadge').innerText = item.category || 'Textbook';
-            document.getElementById('popupCategoryBadge').className = item.category === 'eBook'
-                ? 'px-3 py-1 bg-purple-100 text-purple-600 font-bold rounded-full text-xs sm:text-sm'
-                : 'px-3 py-1 bg-sky-100 text-sky-600 font-bold rounded-full text-xs sm:text-sm';
 
             document.getElementById('popupYear').innerText = `ปีประเมิน: ${item.evaluation_year || '-'}`;
             document.getElementById('popupTitle').innerText = item.title || '-';
@@ -2085,7 +2071,6 @@
                         <td class="py-4 px-4 align-top">
                             <div class="space-y-2">
                                 <div class="flex items-center space-x-2.5 flex-wrap gap-y-1">
-                                    ${getCategoryBadge(item.category)}
                                     <span class="font-bold text-slate-900 text-base leading-snug">
                                         ${escapeHtml(item.title) || '-'}
                                     </span>
@@ -2138,13 +2123,12 @@
 
                     return `
                     <div class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/80 flex flex-col items-center text-center space-y-3.5 transition-all hover:shadow-md">
-                        <div class="w-full flex items-center justify-between">
+                        <div class="w-full flex items-center justify-center">
                             ${item.book_code ? `
                                 <span class="px-3 py-1 bg-blue-50 text-blue-600 border border-blue-200/60 rounded-full text-xs font-bold font-mono tracking-wide">
                                     ${escapeHtml(item.book_code)}
                                 </span>
-                            ` : '<span></span>'}
-                            ${getCategoryBadge(item.category)}
+                            ` : ''}
                         </div>
 
                         <h3 class="text-base font-bold text-slate-900 leading-snug px-2">
@@ -2229,7 +2213,6 @@
                         <td class="py-4 px-4 align-top cursor-pointer group" onclick="openDetailModal(${item.id}, '${item.targetTable}')">
                             <div class="space-y-2">
                                 <div class="flex items-center space-x-2.5 flex-wrap gap-y-1">
-                                    ${getCategoryBadge(item.category)}
                                     <span class="font-bold text-slate-900 text-base leading-snug group-hover:text-blue-600 transition-colors">
                                         ${escapeHtml(item.title) || '-'}
                                     </span>
@@ -2272,14 +2255,6 @@
 
                     return `
                     <div onclick="openDetailModal(${item.id}, '${item.targetTable}')" class="bg-white rounded-2xl p-4 sm:p-5 shadow-sm border border-slate-200/80 flex flex-col items-center text-center space-y-3.5 transition-all cursor-pointer hover:shadow-md active:scale-[0.99]">
-                        <div class="w-full bg-slate-100/90 border border-slate-200/70 py-2 px-3 rounded-xl text-xs font-bold text-slate-700 tracking-tight flex items-center justify-between">
-                            <span class="flex items-center space-x-1">
-                                <i class="fa-solid fa-circle-info text-blue-500 text-xs"></i>
-                                <span>รายละเอียดการประเมิน</span>
-                            </span>
-                            ${getCategoryBadge(item.category)}
-                        </div>
-
                         ${item.book_code ? `
                             <span class="px-3 py-1 bg-blue-50 text-blue-600 border border-blue-200/60 rounded-full text-xs font-bold font-mono tracking-wide">
                                 ${escapeHtml(item.book_code)}
