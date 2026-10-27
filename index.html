@@ -67,6 +67,15 @@
             background-color: rgba(15, 23, 42, 0.75);
             backdrop-filter: blur(4px);
         }
+        /* ซ่อนลูกศรลงของ Dropdown select ทั้งหมด */
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+        }
+        select::-ms-expand {
+            display: none;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col bg-slate-100">
@@ -192,19 +201,16 @@
                             </p>
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 <div>
-                                    <label for="homeTextbookYearFilter" class="block text-[11px] font-medium text-slate-600 mb-1">ปีที่ทำการประเมิน</label>
                                     <select id="homeTextbookYearFilter" onchange="onTextbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
                                         <option value="">ปีทั้งหมด</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label for="homeTextbookDeptFilter" class="block text-[11px] font-medium text-slate-600 mb-1">ภาควิชา</label>
                                     <select id="homeTextbookDeptFilter" onchange="onTextbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
                                         <option value="">ภาควิชาทั้งหมด</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label for="homeTextbookStatusFilter" class="block text-[11px] font-medium text-slate-600 mb-1">สถานะการประเมิน</label>
                                     <select id="homeTextbookStatusFilter" onchange="onTextbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
                                         <option value="">สถานะทั้งหมด</option>
                                     </select>
@@ -219,33 +225,22 @@
                             </p>
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 <div>
-                                    <label for="homeEbookYearFilter" class="block text-[11px] font-medium text-slate-600 mb-1">ปีที่ทำ eBook</label>
                                     <select id="homeEbookYearFilter" onchange="onEbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500">
                                         <option value="">ปีทั้งหมด</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label for="homeEbookDeptFilter" class="block text-[11px] font-medium text-slate-600 mb-1">ภาควิชา</label>
                                     <select id="homeEbookDeptFilter" onchange="onEbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500">
                                         <option value="">ภาควิชาทั้งหมด</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label for="homeEbookStatusFilter" class="block text-[11px] font-medium text-slate-600 mb-1">สถานะ eBook</label>
                                     <select id="homeEbookStatusFilter" onchange="onEbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500">
                                         <option value="">สถานะทั้งหมด</option>
                                     </select>
                                 </div>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="flex items-center justify-between pt-4 mt-4 border-t border-slate-100">
-                        <span class="text-xs text-slate-500" id="homeFilterCountText">กำลังแสดงผลลัพธ์ 0 จาก 0 รายการ</span>
-                        <button type="button" onclick="resetHomeFilters()" class="text-xs font-medium text-slate-500 hover:text-slate-800 flex items-center space-x-1 hover:bg-slate-100 px-3 py-1.5 rounded-lg transition-colors">
-                            <i class="fa-solid fa-rotate-left"></i>
-                            <span>ล้างการค้นหาทั้งหมด</span>
-                        </button>
                     </div>
                 </div>
             </div>
@@ -861,6 +856,7 @@
         let staffFilteredData = [];
         let teacherFilteredData = [];
         let adminList = [];
+        let activeQuickFilter = 'all';
 
         let currentUser = null; 
         let currentRoleSelection = 'teacher';
@@ -1512,6 +1508,18 @@
             filterData();
         }
 
+        function isItemPassed(item) {
+            return item.evaluation_status === 'ผ่านการประเมิน' || item.evaluation_status === 'จัดจำหน่ายผ่าน SE-ED' || item.publication_status === 'ดำเนินการสำเร็จ';
+        }
+
+        function isItemFailed(item) {
+            return item.evaluation_status === 'ไม่ผ่านการประเมิน';
+        }
+
+        function isItemPending(item) {
+            return !isItemPassed(item) && !isItemFailed(item);
+        }
+
         function filterData() {
             const search = (document.getElementById('homeSearchInput')?.value || '').toLowerCase();
             
@@ -1524,6 +1532,11 @@
             const ebStatus = document.getElementById('homeEbookStatusFilter')?.value || '';
 
             let rawFiltered = evaluationsData.filter(item => {
+                // กรองตาม KPI Card
+                if (activeQuickFilter === 'passed' && !isItemPassed(item)) return false;
+                if (activeQuickFilter === 'failed' && !isItemFailed(item)) return false;
+                if (activeQuickFilter === 'pending' && !isItemPending(item)) return false;
+
                 const matchSearch = !search || 
                     (item.title && item.title.toLowerCase().includes(search)) ||
                     (item.author_name && item.author_name.toLowerCase().includes(search)) ||
@@ -1617,8 +1630,8 @@
 
         function renderKPIs() {
             const total = evaluationsData.length;
-            const passed = evaluationsData.filter(i => i.evaluation_status === 'ผ่านการประเมิน' || i.evaluation_status === 'จัดจำหน่ายผ่าน SE-ED' || i.publication_status === 'ดำเนินการสำเร็จ').length;
-            const failed = evaluationsData.filter(i => i.evaluation_status === 'ไม่ผ่านการประเมิน').length;
+            const passed = evaluationsData.filter(i => isItemPassed(i)).length;
+            const failed = evaluationsData.filter(i => isItemFailed(i)).length;
             const pending = total - (passed + failed);
 
             const elemTotal = document.getElementById('kpiTotal');
@@ -1630,6 +1643,16 @@
             if (elemPassed) elemPassed.innerText = passed;
             if (elemPending) elemPending.innerText = pending;
             if (elemFailed) elemFailed.innerText = failed;
+        }
+
+        function renderChart() {
+            const chartCanvas = document.getElementById('statusChart');
+            if (!chartCanvas || typeof Chart === 'undefined') return;
+
+            // ปรับกราฟวงกลมและคำอธิบายใต้กราฟให้คำนวณสัดส่วนตามรายการที่ถูกคัดกรอง (filteredData)
+            const passed = filteredData.filter(i => isItemPassed(i)).length;
+            const failed = filteredData.filter(i => isItemFailed(i)).length;
+            const pending = filteredData.length - (passed + failed);
 
             const legPassed = document.getElementById('legendPassed');
             const legPending = document.getElementById('legendPending');
@@ -1639,16 +1662,7 @@
             if (legPassed) legPassed.innerText = passed;
             if (legPending) legPending.innerText = pending;
             if (legFailed) legFailed.innerText = failed;
-            if (chartCenter) chartCenter.innerText = total;
-        }
-
-        function renderChart() {
-            const chartCanvas = document.getElementById('statusChart');
-            if (!chartCanvas || typeof Chart === 'undefined') return;
-
-            const passed = evaluationsData.filter(i => i.evaluation_status === 'ผ่านการประเมิน' || i.evaluation_status === 'จัดจำหน่ายผ่าน SE-ED' || i.publication_status === 'ดำเนินการสำเร็จ').length;
-            const failed = evaluationsData.filter(i => i.evaluation_status === 'ไม่ผ่านการประเมิน').length;
-            const pending = evaluationsData.length - (passed + failed);
+            if (chartCenter) chartCenter.innerText = filteredData.length;
 
             const ctx = chartCanvas.getContext('2d');
             if (statusChartInstance) {
@@ -1720,11 +1734,12 @@
         }
 
         function applyQuickFilter(type) {
-            resetHomeFilters();
+            activeQuickFilter = type;
             filterData();
         }
 
         function resetHomeFilters() {
+            activeQuickFilter = 'all';
             const searchInput = document.getElementById('homeSearchInput');
             const tbYear = document.getElementById('homeTextbookYearFilter');
             const tbDept = document.getElementById('homeTextbookDeptFilter');
@@ -1773,10 +1788,7 @@
             const mobileContainer = document.getElementById('homeMobileCardContainer');
 
             const tableCount = document.getElementById('homeTableCount');
-            const filterText = document.getElementById('homeFilterCountText');
-
             if (tableCount) tableCount.innerText = filteredData.length;
-            if (filterText) filterText.innerText = `กำลังแสดงผลลัพธ์ ${filteredData.length} จาก ${evaluationsData.length} รายการ`;
 
             if (filteredData.length === 0) {
                 if (tbody) tbody.innerHTML = `<tr><td colspan="3" class="text-center py-12 text-slate-400 font-light">ไม่พบข้อมูลในระบบ</td></tr>`;
