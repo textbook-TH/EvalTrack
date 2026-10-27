@@ -238,6 +238,9 @@
                                 <div>
                                     <select id="homeTextbookStatusFilter" onchange="onTextbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
                                         <option value="">🏷️ สถานะทั้งหมด</option>
+                                        <option value="ดำเนินการประเมิน">ดำเนินการประเมิน</option>
+                                        <option value="ผ่านการประเมิน">ผ่านการประเมิน</option>
+                                        <option value="ไม่ผ่านการประเมิน">ไม่ผ่านการประเมิน</option>
                                     </select>
                                 </div>
                             </div>
@@ -262,6 +265,9 @@
                                 <div>
                                     <select id="homeEbookStatusFilter" onchange="onEbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500">
                                         <option value="">🏷️ สถานะทั้งหมด</option>
+                                        <option value="ดำเนินการจดลิขสิทธิ์">ดำเนินการจดลิขสิทธิ์</option>
+                                        <option value="จัดทำ eBook">จัดทำ eBook</option>
+                                        <option value="จัดจำหน่ายผ่าน SE-ED">จัดจำหน่ายผ่าน SE-ED</option>
                                     </select>
                                 </div>
                             </div>
@@ -391,6 +397,9 @@
                                 <div>
                                     <select id="staffTextbookStatusFilter" onchange="onStaffTextbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
                                         <option value="">🏷️ สถานะทั้งหมด</option>
+                                        <option value="ดำเนินการประเมิน">ดำเนินการประเมิน</option>
+                                        <option value="ผ่านการประเมิน">ผ่านการประเมิน</option>
+                                        <option value="ไม่ผ่านการประเมิน">ไม่ผ่านการประเมิน</option>
                                     </select>
                                 </div>
                             </div>
@@ -415,6 +424,9 @@
                                 <div>
                                     <select id="staffEbookStatusFilter" onchange="onStaffEbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500">
                                         <option value="">🏷️ สถานะทั้งหมด</option>
+                                        <option value="ดำเนินการจดลิขสิทธิ์">ดำเนินการจดลิขสิทธิ์</option>
+                                        <option value="จัดทำ eBook">จัดทำ eBook</option>
+                                        <option value="จัดจำหน่ายผ่าน SE-ED">จัดจำหน่ายผ่าน SE-ED</option>
                                     </select>
                                 </div>
                             </div>
@@ -884,8 +896,8 @@
     <div id="toastContainer" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
 
     <script>
-        // Options predefined for Textbook (evaluation)
-        const TEXTBOOK_EVAL_STATUSES = [
+        // List groups definition for filtering logic
+        const TEXTBOOK_PENDING_STEPS = [
             'รับเอกสารการประเมิน',
             'สรรหาผู้ทรงคุณวุฒิ',
             'เข้ากรรมการคณะ',
@@ -900,7 +912,26 @@
             'ส่งเอกสารผู้ประเมิน รอบ 2',
             'รอการแก้ไข รอบ 2',
             'สรุปผลการประเมิน',
-            'เข้ากรรมการคณะสรุปผล',
+            'เข้ากรรมการคณะสรุปผล'
+        ];
+
+        const EBOOK_COPYRIGHT_STEPS = [
+            'รับเอกสารจดแจ้งลิขสิทธิ์',
+            'เตรียมเอกสารจดแจ้งลิขสิทธิ์',
+            'ส่ง e-Office (Kris)',
+            'รับผลตรวจลิขสิทธิ์',
+            'แจ้งผลการจดแจ้งลิขสิทธิ์'
+        ];
+
+        const EBOOK_PRODUCTION_STEPS = [
+            'ขอรหัส e-ISBN',
+            'เตรียมเอกสารทำ eBook',
+            'ส่ง e-Office (KLLC)'
+        ];
+
+        // Options predefined for Textbook (evaluation)
+        const TEXTBOOK_EVAL_STATUSES = [
+            ...TEXTBOOK_PENDING_STEPS,
             'ผ่านการประเมิน',
             'ไม่ผ่านการประเมิน'
         ];
@@ -917,14 +948,8 @@
 
         // Options predefined for eBook (ebook_evaluation)
         const EBOOK_EVAL_STATUSES = [
-            'รับเอกสารจดแจ้งลิขสิทธิ์',
-            'เตรียมเอกสารจดแจ้งลิขสิทธิ์',
-            'ส่ง e-Office (Kris)',
-            'รับผลตรวจลิขสิทธิ์',
-            'แจ้งผลการจดแจ้งลิขสิทธิ์',
-            'ขอรหัส e-ISBN',
-            'เตรียมเอกสารทำ eBook',
-            'ส่ง e-Office (KLLC)',
+            ...EBOOK_COPYRIGHT_STEPS,
+            ...EBOOK_PRODUCTION_STEPS,
             'จัดจำหน่ายผ่าน SE-ED'
         ];
 
@@ -1740,7 +1765,6 @@
             const ebStatus = document.getElementById('homeEbookStatusFilter')?.value || '';
 
             let rawFiltered = evaluationsData.filter(item => {
-                // กรองตาม KPI Card 5 กล่อง
                 if (activeQuickFilter === 'passed' && !isItemPassed(item)) return false;
                 if (activeQuickFilter === 'pending' && !isItemPending(item)) return false;
                 if (activeQuickFilter === 'ebook_all' && item.targetTable !== 'ebook_evaluation') return false;
@@ -1760,7 +1784,16 @@
                     if (item.targetTable !== 'evaluation') return false;
                     const matchYear = !tbYear || String(item.evaluation_year) === String(tbYear);
                     const matchDept = !tbDept || item.department === tbDept;
-                    const matchStatus = !tbStatus || item.evaluation_status === tbStatus;
+                    
+                    let matchStatus = true;
+                    if (tbStatus === 'ผ่านการประเมิน') {
+                        matchStatus = (item.evaluation_status === 'ผ่านการประเมิน');
+                    } else if (tbStatus === 'ไม่ผ่านการประเมิน') {
+                        matchStatus = (item.evaluation_status === 'ไม่ผ่านการประเมิน');
+                    } else if (tbStatus === 'ดำเนินการประเมิน') {
+                        matchStatus = TEXTBOOK_PENDING_STEPS.includes(item.evaluation_status);
+                    }
+
                     return matchYear && matchDept && matchStatus;
                 }
 
@@ -1769,7 +1802,16 @@
                     if (item.targetTable !== 'ebook_evaluation') return false;
                     const matchYear = !ebYear || String(item.evaluation_year) === String(ebYear);
                     const matchDept = !ebDept || item.department === ebDept;
-                    const matchStatus = !ebStatus || item.evaluation_status === ebStatus;
+                    
+                    let matchStatus = true;
+                    if (ebStatus === 'ดำเนินการจดลิขสิทธิ์') {
+                        matchStatus = EBOOK_COPYRIGHT_STEPS.includes(item.evaluation_status);
+                    } else if (ebStatus === 'จัดทำ eBook') {
+                        matchStatus = EBOOK_PRODUCTION_STEPS.includes(item.evaluation_status);
+                    } else if (ebStatus === 'จัดจำหน่ายผ่าน SE-ED') {
+                        matchStatus = (item.evaluation_status === 'จัดจำหน่ายผ่าน SE-ED');
+                    }
+
                     return matchYear && matchDept && matchStatus;
                 }
 
@@ -1815,7 +1857,16 @@
                     if (item.targetTable !== 'evaluation') return false;
                     const matchYear = !tbYear || String(item.evaluation_year) === String(tbYear);
                     const matchDept = !tbDept || item.department === tbDept;
-                    const matchStatus = !tbStatus || item.evaluation_status === tbStatus;
+                    
+                    let matchStatus = true;
+                    if (tbStatus === 'ผ่านการประเมิน') {
+                        matchStatus = (item.evaluation_status === 'ผ่านการประเมิน');
+                    } else if (tbStatus === 'ไม่ผ่านการประเมิน') {
+                        matchStatus = (item.evaluation_status === 'ไม่ผ่านการประเมิน');
+                    } else if (tbStatus === 'ดำเนินการประเมิน') {
+                        matchStatus = TEXTBOOK_PENDING_STEPS.includes(item.evaluation_status);
+                    }
+
                     return matchYear && matchDept && matchStatus;
                 }
 
@@ -1823,7 +1874,16 @@
                     if (item.targetTable !== 'ebook_evaluation') return false;
                     const matchYear = !ebYear || String(item.evaluation_year) === String(ebYear);
                     const matchDept = !ebDept || item.department === ebDept;
-                    const matchStatus = !ebStatus || item.evaluation_status === ebStatus;
+                    
+                    let matchStatus = true;
+                    if (ebStatus === 'ดำเนินการจดลิขสิทธิ์') {
+                        matchStatus = EBOOK_COPYRIGHT_STEPS.includes(item.evaluation_status);
+                    } else if (ebStatus === 'จัดทำ eBook') {
+                        matchStatus = EBOOK_PRODUCTION_STEPS.includes(item.evaluation_status);
+                    } else if (ebStatus === 'จัดจำหน่ายผ่าน SE-ED') {
+                        matchStatus = (item.evaluation_status === 'จัดจำหน่ายผ่าน SE-ED');
+                    }
+
                     return matchYear && matchDept && matchStatus;
                 }
 
@@ -1863,7 +1923,6 @@
             const failed = evaluationsData.filter(i => isItemFailed(i)).length;
             const pending = total - (passed + failed);
 
-            // คำนวณข้อมูลสำหรับการ์ด eBook 4 และ 5 จากตาราง ebook_evaluation
             const ebookTotal = evaluationsData.filter(i => i.targetTable === 'ebook_evaluation').length;
             const ebookPublished = evaluationsData.filter(i => i.targetTable === 'ebook_evaluation' && i.publication_status === 'ดำเนินการสำเร็จ').length;
 
@@ -1976,31 +2035,25 @@
             const tbData = evaluationsData.filter(i => i.targetTable === 'evaluation');
             const ebData = evaluationsData.filter(i => i.targetTable === 'ebook_evaluation');
 
-            // 1. ตัวเลือกของ Textbook
+            // 1. ตัวเลือกปีและภาควิชาของ Textbook
             const tbYears = [...new Set(tbData.map(i => i.evaluation_year).filter(Boolean))].sort((a,b) => b-a);
             const tbDepts = [...new Set(tbData.map(i => i.department).filter(Boolean))].sort();
-            const tbStatuses = [...new Set(tbData.map(i => i.evaluation_status).filter(Boolean))].sort();
 
             populateOptions('homeTextbookYearFilter', tbYears, '📅 ปีทั้งหมด');
             populateOptions('homeTextbookDeptFilter', tbDepts, '🏢 ภาควิชาทั้งหมด');
-            populateOptions('homeTextbookStatusFilter', tbStatuses, '🏷️ สถานะทั้งหมด');
 
             populateOptions('staffTextbookYearFilter', tbYears, '📅 ปีทั้งหมด');
             populateOptions('staffTextbookDeptFilter', tbDepts, '🏢 ภาควิชาทั้งหมด');
-            populateOptions('staffTextbookStatusFilter', tbStatuses, '🏷️ สถานะทั้งหมด');
 
-            // 2. ตัวเลือกของ eBook
+            // 2. ตัวเลือกปีและภาควิชาของ eBook
             const ebYears = [...new Set(ebData.map(i => i.evaluation_year).filter(Boolean))].sort((a,b) => b-a);
             const ebDepts = [...new Set(ebData.map(i => i.department).filter(Boolean))].sort();
-            const ebStatuses = [...new Set(ebData.map(i => i.evaluation_status).filter(Boolean))].sort();
 
             populateOptions('homeEbookYearFilter', ebYears, '📅 ปีทั้งหมด');
             populateOptions('homeEbookDeptFilter', ebDepts, '🏢 ภาควิชาทั้งหมด');
-            populateOptions('homeEbookStatusFilter', ebStatuses, '🏷️ สถานะทั้งหมด');
 
             populateOptions('staffEbookYearFilter', ebYears, '📅 ปีทั้งหมด');
             populateOptions('staffEbookDeptFilter', ebDepts, '🏢 ภาควิชาทั้งหมด');
-            populateOptions('staffEbookStatusFilter', ebStatuses, '🏷️ สถานะทั้งหมด');
         }
 
         function populateOptions(selectId, items, defaultText) {
