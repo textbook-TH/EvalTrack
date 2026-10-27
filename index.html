@@ -59,6 +59,13 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
         .glass-header {
             background: rgba(11, 19, 41, 0.95);
             backdrop-filter: blur(10px);
@@ -326,33 +333,92 @@
                 </div>
             </div>
 
-            <div class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80">
-                <div class="flex items-center space-x-2 text-amber-500 font-bold mb-3">
-                    <i class="fa-solid fa-user-gear"></i>
-                    <h3 class="text-sm text-slate-800">คัดกรองข้อมูลสถานะการประเมิน</h3>
+            <!-- ปรับปรุงหน้าเจ้าหน้าที่ให้มีสัดส่วนเหมือนหน้าหลักตามภาพ 01 และ 02 -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <div class="lg:col-span-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center space-x-2 text-emerald-600 font-bold mb-4">
+                            <i class="fa-solid fa-globe"></i>
+                            <h3 class="text-base text-slate-800">สัดส่วนสถานะการประเมิน</h3>
+                        </div>
+                        <div class="relative w-48 h-48 mx-auto my-2 flex items-center justify-center">
+                            <canvas id="staffStatusChart"></canvas>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                <span class="text-2xl font-bold text-slate-800" id="staffChartCenterTotal">0</span>
+                                <span class="text-xs text-slate-400">รายการรวม</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-center space-x-4 text-xs font-medium text-slate-600 mt-4 pt-4 border-t border-slate-100">
+                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1.5"></span>ผ่าน (<span id="staffLegendPassed">0</span>)</span>
+                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 mr-1.5"></span>กำลังทำ (<span id="staffLegendPending">0</span>)</span>
+                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 mr-1.5"></span>ไม่ผ่าน (<span id="staffLegendFailed">0</span>)</span>
+                    </div>
                 </div>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                    <div>
-                        <label for="staffSearchInput" class="sr-only">ค้นหารายละเอียดเจ้าหน้าที่</label>
-                        <input type="text" id="staffSearchInput" name="staffSearch" autocomplete="off" oninput="filterStaffData()" placeholder="พิมพ์รายละเอียด..." class="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div>
-                        <label for="staffYearFilter" class="sr-only">กรองปีเจ้าหน้าที่</label>
-                        <select id="staffYearFilter" name="staffYear" onchange="filterStaffData()" class="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs">
-                            <option value="">ปีทั้งหมด</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="staffDeptFilter" class="sr-only">กรองภาควิชาเจ้าหน้าที่</label>
-                        <select id="staffDeptFilter" name="staffDept" onchange="filterStaffData()" class="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs">
-                            <option value="">ภาควิชาทั้งหมด</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label for="staffStatusFilter" class="sr-only">กรองสถานะเจ้าหน้าที่</label>
-                        <select id="staffStatusFilter" name="staffStatus" onchange="filterStaffData()" class="w-full py-2 px-3 bg-slate-50 border border-slate-200 rounded-xl text-xs">
-                            <option value="">สถานะทั้งหมด</option>
-                        </select>
+
+                <div class="lg:col-span-8 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="flex items-center space-x-2 text-amber-500 font-bold mb-2">
+                            <i class="fa-solid fa-user-gear"></i>
+                            <h3 class="text-base text-slate-800">คัดกรองข้อมูลสถานะการประเมิน</h3>
+                        </div>
+
+                        <!-- 1. พิมพ์ค้นหา -->
+                        <div>
+                            <label for="staffSearchInput" class="block text-xs font-medium text-slate-600 mb-1">พิมพ์ค้นหา</label>
+                            <div class="relative">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+                                <input type="text" id="staffSearchInput" name="staffSearch" autocomplete="off" oninput="filterStaffData()" placeholder="พิมพ์รายละเอียด..." class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-500 transition-all">
+                            </div>
+                        </div>
+
+                        <!-- 2. คัดกรอง Textbook -->
+                        <div class="p-3 bg-blue-50/50 rounded-xl border border-blue-100/80 space-y-2">
+                            <p class="text-xs font-bold text-blue-800 flex items-center">
+                                <i class="fa-solid fa-book mr-1.5 text-blue-600"></i>สถานะการประเมิน
+                            </p>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div>
+                                    <select id="staffTextbookYearFilter" onchange="onStaffTextbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+                                        <option value="">📅 ปีทั้งหมด</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <select id="staffTextbookDeptFilter" onchange="onStaffTextbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+                                        <option value="">🏢 ภาควิชาทั้งหมด</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <select id="staffTextbookStatusFilter" onchange="onStaffTextbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
+                                        <option value="">🏷️ สถานะทั้งหมด</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. คัดกรอง eBook -->
+                        <div class="p-3 bg-purple-50/50 rounded-xl border border-purple-100/80 space-y-2">
+                            <p class="text-xs font-bold text-purple-800 flex items-center">
+                                <i class="fa-solid fa-tablet-screen-button mr-1.5 text-purple-600"></i>สถานะ eBook
+                            </p>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div>
+                                    <select id="staffEbookYearFilter" onchange="onStaffEbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500">
+                                        <option value="">📅 ปีทั้งหมด</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <select id="staffEbookDeptFilter" onchange="onStaffEbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500">
+                                        <option value="">🏢 ภาควิชาทั้งหมด</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <select id="staffEbookStatusFilter" onchange="onStaffEbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500">
+                                        <option value="">🏷️ สถานะทั้งหมด</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -457,14 +523,14 @@
         </div>
     </footer>
 
-    <!-- 1. AUTHENTICATION MODAL -->
-    <div id="loginModal" onclick="closeModalOnBackdrop(event, 'loginModal')" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-        <div onclick="event.stopPropagation()" class="bg-white w-[95%] sm:w-[90%] md:w-full max-w-md rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 relative my-auto max-h-[85vh] sm:max-h-[90vh] flex flex-col transform transition-all duration-200">
+    <!-- 1. AUTHENTICATION MODAL (ปรับขนาดพอดีอัตโนมัติ ซ่อน Scrollbar) -->
+    <div id="loginModal" onclick="closeModalOnBackdrop(event, 'loginModal')" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-3 sm:p-4">
+        <div onclick="event.stopPropagation()" class="bg-white w-[95%] sm:w-[90%] md:w-full max-w-md rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 relative my-auto max-h-[90vh] flex flex-col transform transition-all duration-200">
             <button type="button" onclick="closeModal('loginModal')" aria-label="ปิดหน้าต่างเข้าสู่ระบบ" class="absolute top-4 right-4 sm:top-5 sm:right-5 text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100 transition-colors z-10">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
 
-            <div class="overflow-y-auto pr-1">
+            <div class="overflow-y-auto no-scrollbar">
                 <div class="text-center mb-6">
                     <div id="authHeaderIcon" class="w-16 h-16 bg-blue-600 text-white rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg shadow-blue-500/30">
                         <i class="fa-solid fa-user-shield text-2xl"></i>
@@ -492,7 +558,7 @@
                         <label for="loginEmail" class="block text-xs font-semibold text-slate-700 mb-1">อีเมล KMITL</label>
                         <input type="email" id="loginEmail" name="email" required autocomplete="off" placeholder="example@kmitl.ac.th"
                                onmousedown="event.stopPropagation()"
-                               class="w-full pl-9 pr-3 py-2 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange select-text">
+                               class="w-full pl-3 pr-3 py-2 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 select-text">
                     </div>
 
                     <div id="passwordFieldContainer">
@@ -500,7 +566,7 @@
                         <div class="relative">
                             <input type="password" id="loginPassword" name="password" autocomplete="new-password" placeholder="••••••••"
                                    onmousedown="event.stopPropagation()"
-                                   class="w-full pl-9 pr-3 py-2 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-kmitl-orange/20 focus:border-kmitl-orange select-text">
+                                   class="w-full pl-3 pr-9 py-2 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 select-text">
                             <button type="button" onclick="togglePasswordVisibility('loginPassword', 'eyeIconLogin')" aria-label="Toggle password visibility" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600">
                                 <i id="eyeIconLogin" class="fa-solid fa-eye pointer-events-none"></i>
                             </button>
@@ -510,7 +576,7 @@
                     <div id="confirmPasswordFieldContainer" class="hidden">
                         <label for="loginConfirmPassword" class="block text-xs font-semibold text-slate-700 mb-1">ยืนยันรหัสผ่าน</label>
                         <div class="relative">
-                            <input type="password" id="loginConfirmPassword" name="confirmPassword" autocomplete="new-password" placeholder="••••••••" class="w-full px-4 py-3 pr-10 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white">
+                            <input type="password" id="loginConfirmPassword" name="confirmPassword" autocomplete="new-password" placeholder="••••••••" class="w-full px-3 py-2 pr-9 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 select-text">
                             <button type="button" onclick="togglePasswordVisibility('loginConfirmPassword', 'eyeIconConfirm')" aria-label="แสดง/ซ่อนยืนยันรหัสผ่าน" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none p-1">
                                 <i id="eyeIconConfirm" class="fa-solid fa-eye"></i>
                             </button>
@@ -519,7 +585,7 @@
 
                     <p id="loginErrorMsg" class="text-xs text-rose-500 font-medium hidden text-center"></p>
 
-                    <button type="submit" id="authSubmitBtn" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl shadow-lg shadow-blue-600/30 text-sm transition-all flex items-center justify-center space-x-2">
+                    <button type="submit" id="authSubmitBtn" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold rounded-xl shadow-lg shadow-blue-600/30 text-sm transition-all flex items-center justify-center space-x-2">
                         <span id="authSubmitText">เข้าสู่ระบบ</span>
                     </button>
 
@@ -545,8 +611,8 @@
     </div>
 
     <!-- 2. ADD / EDIT WORK MODAL -->
-    <div id="editModal" onclick="closeModalOnBackdrop(event, 'editModal')" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto">
-        <div onclick="event.stopPropagation()" class="bg-white w-[95%] sm:w-[90%] md:w-full max-w-3xl lg:max-w-4xl rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 my-auto max-h-[85vh] sm:max-h-[90vh] flex flex-col transform transition-all duration-200 relative">
+    <div id="editModal" onclick="closeModalOnBackdrop(event, 'editModal')" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-3 sm:p-4 md:p-6">
+        <div onclick="event.stopPropagation()" class="bg-white w-[95%] sm:w-[90%] md:w-full max-w-3xl lg:max-w-4xl rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 my-auto max-h-[90vh] flex flex-col transform transition-all duration-200 relative">
             <button type="button" onclick="closeModal('editModal')" aria-label="ปิดหน้าต่างเพิ่ม/แก้ไขข้อมูล" class="absolute top-4 right-4 sm:top-5 sm:right-5 text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100 transition-colors z-10">
                 <i class="fa-solid fa-xmark text-lg"></i>
             </button>
@@ -708,8 +774,8 @@
     </div>
 
     <!-- 3. EVALUATION DETAIL POPUP MODAL -->
-    <div id="detailModal" onclick="closeModalOnBackdrop(event, 'detailModal')" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-3 sm:p-4 md:p-6 overflow-y-auto">
-        <div onclick="event.stopPropagation()" class="bg-white w-[95%] sm:w-[90%] md:w-full max-w-3xl rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 relative my-auto max-h-[85vh] sm:max-h-[90vh] flex flex-col transform transition-all duration-200">
+    <div id="detailModal" onclick="closeModalOnBackdrop(event, 'detailModal')" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-3 sm:p-4 md:p-6">
+        <div onclick="event.stopPropagation()" class="bg-white w-[95%] sm:w-[90%] md:w-full max-w-3xl rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 relative my-auto max-h-[90vh] flex flex-col transform transition-all duration-200">
             <button type="button" onclick="closeModal('detailModal')" aria-label="ปิดหน้าต่างรายละเอียด" class="absolute top-4 right-4 sm:top-6 sm:right-6 text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100 transition-colors z-10">
                 <i class="fa-solid fa-xmark text-lg sm:text-xl"></i>
             </button>
@@ -792,9 +858,9 @@
     </div>
 
     <!-- 4. DELETE CONFIRMATION MODAL -->
-    <div id="deleteModal" onclick="closeModalOnBackdrop(event, 'deleteModal')" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-        <div onclick="event.stopPropagation()" class="bg-white w-[95%] sm:w-[90%] md:w-full max-w-md rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 my-auto max-h-[85vh] sm:max-h-[90vh] flex flex-col justify-between relative text-center">
-            <div class="overflow-y-auto pr-1">
+    <div id="deleteModal" onclick="closeModalOnBackdrop(event, 'deleteModal')" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-3 sm:p-4">
+        <div onclick="event.stopPropagation()" class="bg-white w-[95%] sm:w-[90%] md:w-full max-w-md rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 my-auto max-h-[90vh] flex flex-col justify-between relative text-center">
+            <div class="overflow-y-auto no-scrollbar">
                 <div class="w-16 h-16 bg-rose-100 text-rose-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
                 </div>
@@ -962,6 +1028,7 @@
         let currentAuthMode = 'login'; 
         let currentActiveView = 'home';
         let statusChartInstance = null;
+        let staffStatusChartInstance = null;
 
         const ITEMS_PER_PAGE = 8;
         let homeCurrentPage = 1;
@@ -1629,6 +1696,26 @@
             filterData();
         }
 
+        function onStaffTextbookFilterChange() {
+            const ebookYear = document.getElementById('staffEbookYearFilter');
+            const ebookDept = document.getElementById('staffEbookDeptFilter');
+            const ebookStatus = document.getElementById('staffEbookStatusFilter');
+            if (ebookYear) ebookYear.value = '';
+            if (ebookDept) ebookDept.value = '';
+            if (ebookStatus) ebookStatus.value = '';
+            filterStaffData();
+        }
+
+        function onStaffEbookFilterChange() {
+            const tbYear = document.getElementById('staffTextbookYearFilter');
+            const tbDept = document.getElementById('staffTextbookDeptFilter');
+            const tbStatus = document.getElementById('staffTextbookStatusFilter');
+            if (tbYear) tbYear.value = '';
+            if (tbDept) tbDept.value = '';
+            if (tbStatus) tbStatus.value = '';
+            filterStaffData();
+        }
+
         function isItemPassed(item) {
             return item.evaluation_status === 'ผ่านการประเมิน' || item.evaluation_status === 'จัดจำหน่ายผ่าน SE-ED' || item.publication_status === 'ดำเนินการสำเร็จ';
         }
@@ -1705,9 +1792,14 @@
             }
 
             const search = (document.getElementById('staffSearchInput')?.value || '').toLowerCase();
-            const year = document.getElementById('staffYearFilter')?.value || '';
-            const dept = document.getElementById('staffDeptFilter')?.value || '';
-            const status = document.getElementById('staffStatusFilter')?.value || '';
+            
+            const tbYear = document.getElementById('staffTextbookYearFilter')?.value || '';
+            const tbDept = document.getElementById('staffTextbookDeptFilter')?.value || '';
+            const tbStatus = document.getElementById('staffTextbookStatusFilter')?.value || '';
+
+            const ebYear = document.getElementById('staffEbookYearFilter')?.value || '';
+            const ebDept = document.getElementById('staffEbookDeptFilter')?.value || '';
+            const ebStatus = document.getElementById('staffEbookStatusFilter')?.value || '';
 
             let raw = evaluationsData.filter(item => {
                 const matchSearch = !search || 
@@ -1717,15 +1809,30 @@
                     (item.isbn && item.isbn.toLowerCase().includes(search)) ||
                     (item.vps_no && item.vps_no.toLowerCase().includes(search));
 
-                const matchYear = !year || String(item.evaluation_year) === String(year);
-                const matchDept = !dept || item.department === dept;
-                const matchStatus = !status || item.evaluation_status === status;
+                if (!matchSearch) return false;
 
-                return matchSearch && matchYear && matchDept && matchStatus;
+                if (tbYear || tbDept || tbStatus) {
+                    if (item.targetTable !== 'evaluation') return false;
+                    const matchYear = !tbYear || String(item.evaluation_year) === String(tbYear);
+                    const matchDept = !tbDept || item.department === tbDept;
+                    const matchStatus = !tbStatus || item.evaluation_status === tbStatus;
+                    return matchYear && matchDept && matchStatus;
+                }
+
+                if (ebYear || ebDept || ebStatus) {
+                    if (item.targetTable !== 'ebook_evaluation') return false;
+                    const matchYear = !ebYear || String(item.evaluation_year) === String(ebYear);
+                    const matchDept = !ebDept || item.department === ebDept;
+                    const matchStatus = !ebStatus || item.evaluation_status === ebStatus;
+                    return matchYear && matchDept && matchStatus;
+                }
+
+                return true;
             });
 
             staffFilteredData = sortByBookCodeDesc(raw);
             staffCurrentPage = 1;
+            renderStaffChart();
             renderStaffTable();
         }
 
@@ -1777,7 +1884,6 @@
             const chartCanvas = document.getElementById('statusChart');
             if (!chartCanvas || typeof Chart === 'undefined') return;
 
-            // ปรับกราฟวงกลมและคำอธิบายใต้กราฟให้คำนวณสัดส่วนตามรายการที่ถูกคัดกรอง (filteredData)
             const passed = filteredData.filter(i => isItemPassed(i)).length;
             const failed = filteredData.filter(i => isItemFailed(i)).length;
             const pending = filteredData.length - (passed + failed);
@@ -1820,11 +1926,57 @@
             });
         }
 
+        function renderStaffChart() {
+            const chartCanvas = document.getElementById('staffStatusChart');
+            if (!chartCanvas || typeof Chart === 'undefined') return;
+
+            const passed = staffFilteredData.filter(i => isItemPassed(i)).length;
+            const failed = staffFilteredData.filter(i => isItemFailed(i)).length;
+            const pending = staffFilteredData.length - (passed + failed);
+
+            const legPassed = document.getElementById('staffLegendPassed');
+            const legPending = document.getElementById('staffLegendPending');
+            const legFailed = document.getElementById('staffLegendFailed');
+            const chartCenter = document.getElementById('staffChartCenterTotal');
+
+            if (legPassed) legPassed.innerText = passed;
+            if (legPending) legPending.innerText = pending;
+            if (legFailed) legFailed.innerText = failed;
+            if (chartCenter) chartCenter.innerText = staffFilteredData.length;
+
+            const ctx = chartCanvas.getContext('2d');
+            if (staffStatusChartInstance) {
+                staffStatusChartInstance.destroy();
+            }
+
+            staffStatusChartInstance = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['ผ่าน', 'กำลังทำ', 'ไม่ผ่าน'],
+                    datasets: [{
+                        data: [passed, pending, failed],
+                        backgroundColor: ['#10b981', '#fbbf24', '#f43f5e'],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    cutout: '75%',
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: true }
+                    },
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+
         function populateFilterDropdowns() {
             const tbData = evaluationsData.filter(i => i.targetTable === 'evaluation');
             const ebData = evaluationsData.filter(i => i.targetTable === 'ebook_evaluation');
 
-            // 1. ตัวเลือกของ Textbook (เพิ่มไอคอนตามโจทย์)
+            // 1. ตัวเลือกของ Textbook
             const tbYears = [...new Set(tbData.map(i => i.evaluation_year).filter(Boolean))].sort((a,b) => b-a);
             const tbDepts = [...new Set(tbData.map(i => i.department).filter(Boolean))].sort();
             const tbStatuses = [...new Set(tbData.map(i => i.evaluation_status).filter(Boolean))].sort();
@@ -1833,7 +1985,11 @@
             populateOptions('homeTextbookDeptFilter', tbDepts, '🏢 ภาควิชาทั้งหมด');
             populateOptions('homeTextbookStatusFilter', tbStatuses, '🏷️ สถานะทั้งหมด');
 
-            // 2. ตัวเลือกของ eBook (เพิ่มไอคอนตามโจทย์)
+            populateOptions('staffTextbookYearFilter', tbYears, '📅 ปีทั้งหมด');
+            populateOptions('staffTextbookDeptFilter', tbDepts, '🏢 ภาควิชาทั้งหมด');
+            populateOptions('staffTextbookStatusFilter', tbStatuses, '🏷️ สถานะทั้งหมด');
+
+            // 2. ตัวเลือกของ eBook
             const ebYears = [...new Set(ebData.map(i => i.evaluation_year).filter(Boolean))].sort((a,b) => b-a);
             const ebDepts = [...new Set(ebData.map(i => i.department).filter(Boolean))].sort();
             const ebStatuses = [...new Set(ebData.map(i => i.evaluation_status).filter(Boolean))].sort();
@@ -1842,14 +1998,9 @@
             populateOptions('homeEbookDeptFilter', ebDepts, '🏢 ภาควิชาทั้งหมด');
             populateOptions('homeEbookStatusFilter', ebStatuses, '🏷️ สถานะทั้งหมด');
 
-            // 3. ตัวเลือกฝั่ง Staff (คงตัวเลือกเดิม)
-            const allYears = [...new Set(evaluationsData.map(i => i.evaluation_year).filter(Boolean))].sort((a,b) => b-a);
-            const allDepts = [...new Set(evaluationsData.map(i => i.department).filter(Boolean))].sort();
-            const allStatuses = [...new Set(evaluationsData.map(i => i.evaluation_status).filter(Boolean))].sort();
-
-            populateOptions('staffYearFilter', allYears, 'ปีทั้งหมด');
-            populateOptions('staffDeptFilter', allDepts, 'ภาควิชาทั้งหมด');
-            populateOptions('staffStatusFilter', allStatuses, 'สถานะทั้งหมด');
+            populateOptions('staffEbookYearFilter', ebYears, '📅 ปีทั้งหมด');
+            populateOptions('staffEbookDeptFilter', ebDepts, '🏢 ภาควิชาทั้งหมด');
+            populateOptions('staffEbookStatusFilter', ebStatuses, '🏷️ สถานะทั้งหมด');
         }
 
         function populateOptions(selectId, items, defaultText) {
@@ -1864,7 +2015,6 @@
         function applyQuickFilter(type) {
             activeQuickFilter = type;
 
-            // กำหนดสไตล์กรอบเรืองแสง Active Filter Ring Indicator ตามสีประจำการ์ด
             const cardMap = {
                 'all': { id: 'kpiCard-all', activeClass: 'ring-4 ring-sky-400 border-sky-500 shadow-md bg-sky-50/50' },
                 'passed': { id: 'kpiCard-passed', activeClass: 'ring-4 ring-emerald-400 border-emerald-500 shadow-md bg-emerald-50/50' },
@@ -1918,10 +2068,6 @@
                 return `<span class="px-2.5 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-semibold inline-flex items-center space-x-1 whitespace-nowrap"><i class="fa-solid fa-circle-xmark text-[10px]"></i><span>ไม่ผ่านการประเมิน</span></span>`;
             }
             return `<span class="px-2.5 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-semibold inline-flex items-center space-x-1 whitespace-nowrap"><i class="fa-solid fa-hourglass-half text-[10px]"></i><span class="whitespace-nowrap">${escapeHtml(status)}</span></span>`;
-        }
-
-        function getCategoryBadge(category) {
-            return '';
         }
 
         function getMobileStatusBadge(status) {
