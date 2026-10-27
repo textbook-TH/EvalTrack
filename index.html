@@ -103,20 +103,22 @@
         <section id="homeView" class="space-y-6">
             <!-- 5 KPI CARDS -->
             <div class="hidden sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
-                <div onclick="applyQuickFilter('all')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer hover:shadow-md transition-all duration-200 group">
+                <!-- การ์ด 1: ผู้ขอประเมินทั้งหมด -->
+                <div id="kpiCard-all" onclick="applyQuickFilter('all')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:bg-sky-50 hover:border-sky-300 active:scale-95 group">
                     <div>
                         <p class="text-xs font-bold text-slate-700 mb-1">ผู้ขอประเมินทั้งหมด</p>
                         <h2 class="text-2xl sm:text-3xl font-bold text-slate-800" id="kpiTotal">0</h2>
-                        <span class="text-[11px] text-slate-400 group-hover:text-blue-600 transition-colors flex items-center mt-2">
+                        <span class="text-[11px] text-slate-400 group-hover:text-sky-600 transition-colors flex items-center mt-2">
                             <i class="fa-solid fa-list-ul mr-1"></i> คลิกเพื่อดูทั้งหมด
                         </span>
                     </div>
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-600 text-lg sm:text-xl group-hover:scale-110 transition-transform">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-600 text-lg sm:text-xl transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12 group-hover:bg-sky-100 group-hover:text-sky-600">
                         <i class="fa-solid fa-bars-staggered"></i>
                     </div>
                 </div>
 
-                <div onclick="applyQuickFilter('passed')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer hover:shadow-md transition-all duration-200 group">
+                <!-- การ์ด 2: ผ่านการประเมิน -->
+                <div id="kpiCard-passed" onclick="applyQuickFilter('passed')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:bg-emerald-50 hover:border-emerald-300 active:scale-95 group">
                     <div>
                         <p class="text-xs font-bold text-emerald-600 mb-1">ผ่านการประเมิน</p>
                         <h2 class="text-2xl sm:text-3xl font-bold text-emerald-600" id="kpiPassed">0</h2>
@@ -124,12 +126,13 @@
                             <i class="fa-solid fa-filter mr-1"></i> คลิกเพื่อคัดกรอง
                         </span>
                     </div>
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-500 text-lg sm:text-xl group-hover:scale-110 transition-transform">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-500 text-lg sm:text-xl transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12 group-hover:bg-emerald-100">
                         <i class="fa-solid fa-check-circle"></i>
                     </div>
                 </div>
 
-                <div onclick="applyQuickFilter('pending')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer hover:shadow-md transition-all duration-200 group">
+                <!-- การ์ด 3: กำลังดำเนินการประเมิน -->
+                <div id="kpiCard-pending" onclick="applyQuickFilter('pending')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:bg-amber-50 hover:border-amber-300 active:scale-95 group">
                     <div>
                         <p class="text-xs font-bold text-amber-600 mb-1">กำลังดำเนินการประเมิน</p>
                         <h2 class="text-2xl sm:text-3xl font-bold text-amber-500" id="kpiPending">0</h2>
@@ -137,25 +140,27 @@
                             <i class="fa-solid fa-filter mr-1"></i> คลิกเพื่อคัดกรอง
                         </span>
                     </div>
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-500 text-lg sm:text-xl group-hover:scale-110 transition-transform">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-500 text-lg sm:text-xl transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12 group-hover:bg-amber-100">
                         <i class="fa-solid fa-hourglass-half"></i>
                     </div>
                 </div>
 
-                <div onclick="applyQuickFilter('ebook_all')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer hover:shadow-md transition-all duration-200 group">
+                <!-- การ์ด 4: รายการ eBook ทั้งหมด -->
+                <div id="kpiCard-ebook_all" onclick="applyQuickFilter('ebook_all')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:bg-purple-50 hover:border-purple-300 active:scale-95 group">
                     <div>
-                        <p class="text-xs font-bold text-purple-600 mb-1">eBook ทั้งหมด</p>
+                        <p class="text-xs font-bold text-purple-600 mb-1">รายการ eBook ทั้งหมด</p>
                         <h2 class="text-2xl sm:text-3xl font-bold text-purple-600" id="kpiEbookTotal">0</h2>
                         <span class="text-[11px] text-purple-500 group-hover:underline flex items-center mt-2">
                             <i class="fa-solid fa-filter mr-1"></i> คลิกเพื่อคัดกรอง
                         </span>
                     </div>
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600 text-lg sm:text-xl group-hover:scale-110 transition-transform">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600 text-lg sm:text-xl transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12 group-hover:bg-purple-100">
                         <i class="fa-solid fa-tablet-screen-button"></i>
                     </div>
                 </div>
 
-                <div onclick="applyQuickFilter('ebook_published')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer hover:shadow-md transition-all duration-200 group">
+                <!-- การ์ด 5: eBook เผยแพร่แล้ว -->
+                <div id="kpiCard-ebook_published" onclick="applyQuickFilter('ebook_published')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:bg-indigo-50 hover:border-indigo-300 active:scale-95 group">
                     <div>
                         <p class="text-xs font-bold text-indigo-600 mb-1">eBook เผยแพร่แล้ว</p>
                         <h2 class="text-2xl sm:text-3xl font-bold text-indigo-600" id="kpiEbookPublished">0</h2>
@@ -163,7 +168,7 @@
                             <i class="fa-solid fa-filter mr-1"></i> คลิกเพื่อคัดกรอง
                         </span>
                     </div>
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 text-lg sm:text-xl group-hover:scale-110 transition-transform">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 text-lg sm:text-xl transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12 group-hover:bg-indigo-100">
                         <i class="fa-solid fa-book-bookmark"></i>
                     </div>
                 </div>
@@ -1755,6 +1760,28 @@
 
         function applyQuickFilter(type) {
             activeQuickFilter = type;
+
+            // กำหนดสไตล์กรอบเรืองแสง Active Filter Ring Indicator ตามสีประจำการ์ด
+            const cardMap = {
+                'all': { id: 'kpiCard-all', activeClass: 'ring-4 ring-sky-400 border-sky-500 shadow-md bg-sky-50/50' },
+                'passed': { id: 'kpiCard-passed', activeClass: 'ring-4 ring-emerald-400 border-emerald-500 shadow-md bg-emerald-50/50' },
+                'pending': { id: 'kpiCard-pending', activeClass: 'ring-4 ring-amber-400 border-amber-500 shadow-md bg-amber-50/50' },
+                'ebook_all': { id: 'kpiCard-ebook_all', activeClass: 'ring-4 ring-purple-400 border-purple-500 shadow-md bg-purple-50/50' },
+                'ebook_published': { id: 'kpiCard-ebook_published', activeClass: 'ring-4 ring-indigo-400 border-indigo-500 shadow-md bg-indigo-50/50' }
+            };
+
+            Object.keys(cardMap).forEach(key => {
+                const card = document.getElementById(cardMap[key].id);
+                if (card) {
+                    const activeClasses = cardMap[key].activeClass.split(' ');
+                    if (key === type) {
+                        card.classList.add(...activeClasses);
+                    } else {
+                        card.classList.remove(...activeClasses);
+                    }
+                }
+            });
+
             filterData();
         }
 
