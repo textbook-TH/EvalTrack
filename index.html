@@ -101,57 +101,70 @@
 
         <!-- PAGE 1: HOME VIEW -->
         <section id="homeView" class="space-y-6">
-            <!-- 4 KPI CARDS -->
-            <div class="hidden sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div onclick="applyQuickFilter('all')" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer hover:shadow-md transition-all duration-200 group">
+            <!-- 5 KPI CARDS -->
+            <div class="hidden sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+                <div onclick="applyQuickFilter('all')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer hover:shadow-md transition-all duration-200 group">
                     <div>
-                        <p class="text-sm font-bold text-slate-700 mb-1">ผู้ขอประเมินทั้งหมด</p>
-                        <h2 class="text-3xl font-bold text-slate-800" id="kpiTotal">0</h2>
+                        <p class="text-xs font-bold text-slate-700 mb-1">ผู้ขอประเมินทั้งหมด</p>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-800" id="kpiTotal">0</h2>
                         <span class="text-[11px] text-slate-400 group-hover:text-blue-600 transition-colors flex items-center mt-2">
                             <i class="fa-solid fa-list-ul mr-1"></i> คลิกเพื่อดูทั้งหมด
                         </span>
                     </div>
-                    <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-600 text-xl group-hover:scale-110 transition-transform">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-600 text-lg sm:text-xl group-hover:scale-110 transition-transform">
                         <i class="fa-solid fa-bars-staggered"></i>
                     </div>
                 </div>
 
-                <div onclick="applyQuickFilter('passed')" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer hover:shadow-md transition-all duration-200 group">
+                <div onclick="applyQuickFilter('passed')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer hover:shadow-md transition-all duration-200 group">
                     <div>
-                        <p class="text-sm font-bold text-emerald-600 mb-1">ผ่านการประเมิน</p>
-                        <h2 class="text-3xl font-bold text-emerald-600" id="kpiPassed">0</h2>
+                        <p class="text-xs font-bold text-emerald-600 mb-1">ผ่านการประเมิน</p>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-emerald-600" id="kpiPassed">0</h2>
                         <span class="text-[11px] text-emerald-500 group-hover:underline flex items-center mt-2">
                             <i class="fa-solid fa-filter mr-1"></i> คลิกเพื่อคัดกรอง
                         </span>
                     </div>
-                    <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-500 text-xl group-hover:scale-110 transition-transform">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-500 text-lg sm:text-xl group-hover:scale-110 transition-transform">
                         <i class="fa-solid fa-check-circle"></i>
                     </div>
                 </div>
 
-                <div onclick="applyQuickFilter('pending')" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer hover:shadow-md transition-all duration-200 group">
+                <div onclick="applyQuickFilter('pending')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer hover:shadow-md transition-all duration-200 group">
                     <div>
-                        <p class="text-sm font-bold text-amber-600 mb-1">กำลังดำเนินการประเมิน</p>
-                        <h2 class="text-3xl font-bold text-amber-500" id="kpiPending">0</h2>
+                        <p class="text-xs font-bold text-amber-600 mb-1">กำลังดำเนินการประเมิน</p>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-amber-500" id="kpiPending">0</h2>
                         <span class="text-[11px] text-amber-500 group-hover:underline flex items-center mt-2">
                             <i class="fa-solid fa-filter mr-1"></i> คลิกเพื่อคัดกรอง
                         </span>
                     </div>
-                    <div class="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-500 text-xl group-hover:scale-110 transition-transform">
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-amber-500 text-lg sm:text-xl group-hover:scale-110 transition-transform">
                         <i class="fa-solid fa-hourglass-half"></i>
                     </div>
                 </div>
 
-                <div onclick="applyQuickFilter('failed')" class="bg-white p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer hover:shadow-md transition-all duration-200 group">
+                <div onclick="applyQuickFilter('ebook_all')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer hover:shadow-md transition-all duration-200 group">
                     <div>
-                        <p class="text-sm font-bold text-rose-600 mb-1">ไม่ผ่านการประเมิน</p>
-                        <h2 class="text-3xl font-bold text-rose-600" id="kpiFailed">0</h2>
-                        <span class="text-[11px] text-rose-500 group-hover:underline flex items-center mt-2">
+                        <p class="text-xs font-bold text-purple-600 mb-1">eBook ทั้งหมด</p>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-purple-600" id="kpiEbookTotal">0</h2>
+                        <span class="text-[11px] text-purple-500 group-hover:underline flex items-center mt-2">
                             <i class="fa-solid fa-filter mr-1"></i> คลิกเพื่อคัดกรอง
                         </span>
                     </div>
-                    <div class="w-12 h-12 bg-rose-50 rounded-2xl flex items-center justify-center text-rose-500 text-xl group-hover:scale-110 transition-transform">
-                        <i class="fa-solid fa-times-circle"></i>
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600 text-lg sm:text-xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-tablet-screen-button"></i>
+                    </div>
+                </div>
+
+                <div onclick="applyQuickFilter('ebook_published')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer hover:shadow-md transition-all duration-200 group">
+                    <div>
+                        <p class="text-xs font-bold text-indigo-600 mb-1">eBook เผยแพร่แล้ว</p>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-indigo-600" id="kpiEbookPublished">0</h2>
+                        <span class="text-[11px] text-indigo-500 group-hover:underline flex items-center mt-2">
+                            <i class="fa-solid fa-filter mr-1"></i> คลิกเพื่อคัดกรอง
+                        </span>
+                    </div>
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 text-lg sm:text-xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-book-bookmark"></i>
                     </div>
                 </div>
             </div>
@@ -202,17 +215,17 @@
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 <div>
                                     <select id="homeTextbookYearFilter" onchange="onTextbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                                        <option value="">ปีทั้งหมด</option>
+                                        <option value="">📅 ปีทั้งหมด</option>
                                     </select>
                                 </div>
                                 <div>
                                     <select id="homeTextbookDeptFilter" onchange="onTextbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                                        <option value="">ภาควิชาทั้งหมด</option>
+                                        <option value="">🏢 ภาควิชาทั้งหมด</option>
                                     </select>
                                 </div>
                                 <div>
                                     <select id="homeTextbookStatusFilter" onchange="onTextbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500">
-                                        <option value="">สถานะทั้งหมด</option>
+                                        <option value="">🏷️ สถานะทั้งหมด</option>
                                     </select>
                                 </div>
                             </div>
@@ -226,17 +239,17 @@
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                                 <div>
                                     <select id="homeEbookYearFilter" onchange="onEbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500">
-                                        <option value="">ปีทั้งหมด</option>
+                                        <option value="">📅 ปีทั้งหมด</option>
                                     </select>
                                 </div>
                                 <div>
                                     <select id="homeEbookDeptFilter" onchange="onEbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500">
-                                        <option value="">ภาควิชาทั้งหมด</option>
+                                        <option value="">🏢 ภาควิชาทั้งหมด</option>
                                     </select>
                                 </div>
                                 <div>
                                     <select id="homeEbookStatusFilter" onchange="onEbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500">
-                                        <option value="">สถานะทั้งหมด</option>
+                                        <option value="">🏷️ สถานะทั้งหมด</option>
                                     </select>
                                 </div>
                             </div>
@@ -1532,10 +1545,11 @@
             const ebStatus = document.getElementById('homeEbookStatusFilter')?.value || '';
 
             let rawFiltered = evaluationsData.filter(item => {
-                // กรองตาม KPI Card
+                // กรองตาม KPI Card 5 กล่อง
                 if (activeQuickFilter === 'passed' && !isItemPassed(item)) return false;
-                if (activeQuickFilter === 'failed' && !isItemFailed(item)) return false;
                 if (activeQuickFilter === 'pending' && !isItemPending(item)) return false;
+                if (activeQuickFilter === 'ebook_all' && item.targetTable !== 'ebook_evaluation') return false;
+                if (activeQuickFilter === 'ebook_published' && (item.targetTable !== 'ebook_evaluation' || item.publication_status !== 'ดำเนินการสำเร็จ')) return false;
 
                 const matchSearch = !search || 
                     (item.title && item.title.toLowerCase().includes(search)) ||
@@ -1634,15 +1648,21 @@
             const failed = evaluationsData.filter(i => isItemFailed(i)).length;
             const pending = total - (passed + failed);
 
+            // คำนวณข้อมูลสำหรับการ์ด eBook 4 และ 5 จากตาราง ebook_evaluation
+            const ebookTotal = evaluationsData.filter(i => i.targetTable === 'ebook_evaluation').length;
+            const ebookPublished = evaluationsData.filter(i => i.targetTable === 'ebook_evaluation' && i.publication_status === 'ดำเนินการสำเร็จ').length;
+
             const elemTotal = document.getElementById('kpiTotal');
             const elemPassed = document.getElementById('kpiPassed');
             const elemPending = document.getElementById('kpiPending');
-            const elemFailed = document.getElementById('kpiFailed');
+            const elemEbookTotal = document.getElementById('kpiEbookTotal');
+            const elemEbookPublished = document.getElementById('kpiEbookPublished');
 
             if (elemTotal) elemTotal.innerText = total;
             if (elemPassed) elemPassed.innerText = passed;
             if (elemPending) elemPending.innerText = pending;
-            if (elemFailed) elemFailed.innerText = failed;
+            if (elemEbookTotal) elemEbookTotal.innerText = ebookTotal;
+            if (elemEbookPublished) elemEbookPublished.innerText = ebookPublished;
         }
 
         function renderChart() {
@@ -1696,25 +1716,25 @@
             const tbData = evaluationsData.filter(i => i.targetTable === 'evaluation');
             const ebData = evaluationsData.filter(i => i.targetTable === 'ebook_evaluation');
 
-            // 1. ตัวเลือกของ Textbook
+            // 1. ตัวเลือกของ Textbook (เพิ่มไอคอนตามโจทย์)
             const tbYears = [...new Set(tbData.map(i => i.evaluation_year).filter(Boolean))].sort((a,b) => b-a);
             const tbDepts = [...new Set(tbData.map(i => i.department).filter(Boolean))].sort();
             const tbStatuses = [...new Set(tbData.map(i => i.evaluation_status).filter(Boolean))].sort();
 
-            populateOptions('homeTextbookYearFilter', tbYears, 'ปีทั้งหมด');
-            populateOptions('homeTextbookDeptFilter', tbDepts, 'ภาควิชาทั้งหมด');
-            populateOptions('homeTextbookStatusFilter', tbStatuses, 'สถานะทั้งหมด');
+            populateOptions('homeTextbookYearFilter', tbYears, '📅 ปีทั้งหมด');
+            populateOptions('homeTextbookDeptFilter', tbDepts, '🏢 ภาควิชาทั้งหมด');
+            populateOptions('homeTextbookStatusFilter', tbStatuses, '🏷️ สถานะทั้งหมด');
 
-            // 2. ตัวเลือกของ eBook
+            // 2. ตัวเลือกของ eBook (เพิ่มไอคอนตามโจทย์)
             const ebYears = [...new Set(ebData.map(i => i.evaluation_year).filter(Boolean))].sort((a,b) => b-a);
             const ebDepts = [...new Set(ebData.map(i => i.department).filter(Boolean))].sort();
             const ebStatuses = [...new Set(ebData.map(i => i.evaluation_status).filter(Boolean))].sort();
 
-            populateOptions('homeEbookYearFilter', ebYears, 'ปีทั้งหมด');
-            populateOptions('homeEbookDeptFilter', ebDepts, 'ภาควิชาทั้งหมด');
-            populateOptions('homeEbookStatusFilter', ebStatuses, 'สถานะทั้งหมด');
+            populateOptions('homeEbookYearFilter', ebYears, '📅 ปีทั้งหมด');
+            populateOptions('homeEbookDeptFilter', ebDepts, '🏢 ภาควิชาทั้งหมด');
+            populateOptions('homeEbookStatusFilter', ebStatuses, '🏷️ สถานะทั้งหมด');
 
-            // 3. ตัวเลือกฝั่ง Staff
+            // 3. ตัวเลือกฝั่ง Staff (คงตัวเลือกเดิม)
             const allYears = [...new Set(evaluationsData.map(i => i.evaluation_year).filter(Boolean))].sort((a,b) => b-a);
             const allDepts = [...new Set(evaluationsData.map(i => i.department).filter(Boolean))].sort();
             const allStatuses = [...new Set(evaluationsData.map(i => i.evaluation_status).filter(Boolean))].sort();
