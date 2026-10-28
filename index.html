@@ -339,7 +339,6 @@
                 </div>
             </div>
 
-            <!-- ปรับปรุงหน้าเจ้าหน้าที่ให้มีสัดส่วนเหมือนหน้าหลักตามภาพ 01 และ 02 -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <div class="lg:col-span-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
                     <div>
@@ -535,7 +534,7 @@
         </div>
     </footer>
 
-    <!-- 1. AUTHENTICATION MODAL (ปรับขนาดพอดีอัตโนมัติ ซ่อน Scrollbar) -->
+    <!-- 1. AUTHENTICATION MODAL -->
     <div id="loginModal" onclick="closeModalOnBackdrop(event, 'loginModal')" class="fixed inset-0 z-50 hidden modal-backdrop flex items-center justify-center p-3 sm:p-4">
         <div onclick="event.stopPropagation()" class="bg-white w-[95%] sm:w-[90%] md:w-full max-w-md rounded-2xl sm:rounded-3xl shadow-2xl p-4 sm:p-6 md:p-8 relative my-auto max-h-[90vh] flex flex-col transform transition-all duration-200">
             <button type="button" onclick="closeModal('loginModal')" aria-label="ปิดหน้าต่างเข้าสู่ระบบ" class="absolute top-4 right-4 sm:top-5 sm:right-5 text-slate-400 hover:text-slate-600 w-8 h-8 rounded-full flex items-center justify-center hover:bg-slate-100 transition-colors z-10">
@@ -823,8 +822,8 @@
                         </div>
                     </div>
 
-                    <div class="bg-slate-50/70 border border-slate-100 rounded-3xl p-4 sm:p-6 my-2">
-                        <div class="grid grid-cols-4 sm:grid-cols-6 gap-2 sm:gap-4 relative text-center" id="popupFlowStepsContainer">
+                    <div class="bg-slate-50/70 border border-slate-100 rounded-3xl p-4 sm:p-6 my-2 relative overflow-hidden">
+                        <div id="popupFlowStepsContainer" class="relative z-10">
                         </div>
                     </div>
                 </div>
@@ -1779,7 +1778,6 @@
 
                 if (!matchSearch) return false;
 
-                // กรณีมีการเลือกคัดกรอง Textbook (ตาราง evaluation)
                 if (tbYear || tbDept || tbStatus) {
                     if (item.targetTable !== 'evaluation') return false;
                     const matchYear = !tbYear || String(item.evaluation_year) === String(tbYear);
@@ -1797,7 +1795,6 @@
                     return matchYear && matchDept && matchStatus;
                 }
 
-                // กรณีมีการเลือกคัดกรอง eBook (ตาราง ebook_evaluation)
                 if (ebYear || ebDept || ebStatus) {
                     if (item.targetTable !== 'ebook_evaluation') return false;
                     const matchYear = !ebYear || String(item.evaluation_year) === String(ebYear);
@@ -2035,7 +2032,6 @@
             const tbData = evaluationsData.filter(i => i.targetTable === 'evaluation');
             const ebData = evaluationsData.filter(i => i.targetTable === 'ebook_evaluation');
 
-            // 1. ตัวเลือกปีและภาควิชาของ Textbook
             const tbYears = [...new Set(tbData.map(i => i.evaluation_year).filter(Boolean))].sort((a,b) => b-a);
             const tbDepts = [...new Set(tbData.map(i => i.department).filter(Boolean))].sort();
 
@@ -2045,7 +2041,6 @@
             populateOptions('staffTextbookYearFilter', tbYears, '📅 ปีทั้งหมด');
             populateOptions('staffTextbookDeptFilter', tbDepts, '🏢 ภาควิชาทั้งหมด');
 
-            // 2. ตัวเลือกปีและภาควิชาของ eBook
             const ebYears = [...new Set(ebData.map(i => i.evaluation_year).filter(Boolean))].sort((a,b) => b-a);
             const ebDepts = [...new Set(ebData.map(i => i.department).filter(Boolean))].sort();
 
@@ -2258,7 +2253,6 @@
             let mainSteps = [];
 
             if (isEbook) {
-                // --- 1. แยกการทำงานสำหรับ eBook (4 ขั้นตอนหลัก) ---
                 const ebStep1Sub = ['ยื่นจดลิขสิทธิ์', 'รับเอกสารจดแจ้งลิขสิทธิ์', 'เตรียมเอกสารจดแจ้งลิขสิทธิ์'];
                 const ebStep2Sub = ['จดลิขสิทธิ์', 'ส่ง e-Office (Kris)', 'รับผลตรวจลิขสิทธิ์', 'แจ้งผลการจดแจ้งลิขสิทธิ์'];
                 const ebStep3Sub = ['จัดทำ eBook', 'ขอรหัส e-ISBN', 'เตรียมเอกสารทำ eBook', 'ส่ง e-Office (KLLC)'];
@@ -2274,7 +2268,7 @@
                     percentage = 35;
                     currentStepIdx = 2;
                 } else if (ebStep1Sub.includes(evalStatus)) {
-                    percentage = 5;
+                    percentage = 15;
                     currentStepIdx = 1;
                 } else {
                     percentage = 0;
@@ -2282,16 +2276,13 @@
                 }
 
                 mainSteps = [
-                    { id: 1, title: 'ยื่นจดลิขสิทธิ์' },
-                    { id: 2, title: 'จดลิขสิทธิ์' },
-                    { id: 3, title: 'จัดทำ eBook' },
-                    { id: 4, title: 'จัดจำหน่าย' }
+                    { id: 1, title: 'ยื่นจดลิขสิทธิ์', icon: 'fa-file-signature' },
+                    { id: 2, title: 'จดลิขสิทธิ์', icon: 'fa-certificate' },
+                    { id: 3, title: 'จัดทำ eBook', icon: 'fa-file-code' },
+                    { id: 4, title: 'จัดจำหน่าย', icon: 'fa-store' }
                 ];
 
-                container.className = "grid grid-cols-4 gap-2 sm:gap-4 relative text-center";
-
             } else {
-                // --- 2. คงการทำงานสำหรับ Textbook (6 ขั้นตอนหลักเดิม) ---
                 const step1Sub = ['รับเอกสารการประเมิน', 'สรรหาผู้ทรงคุณวุฒิ'];
                 const step2Sub = ['เข้ากรรมการคณะ'];
                 const step3Sub = [
@@ -2331,7 +2322,7 @@
                     percentage = 20;
                     currentStepIdx = 2;
                 } else if (isStep1) {
-                    percentage = 5;
+                    percentage = 10;
                     currentStepIdx = 1;
                 } else {
                     percentage = 0;
@@ -2339,22 +2330,20 @@
                 }
 
                 let step6Title = 'จัดพิมพ์';
-                if (isFailed) step6Title = 'ยกเลิกจัดพิมพ์';
-                else if (isSelfPrint) step6Title = 'จัดพิมพ์เอง';
+                let step6Icon = 'fa-print';
+                if (isFailed) { step6Title = 'ยกเลิกจัดพิมพ์'; step6Icon = 'fa-ban'; }
+                else if (isSelfPrint) { step6Title = 'จัดพิมพ์เอง'; step6Icon = 'fa-book-open'; }
 
                 mainSteps = [
-                    { id: 1, title: 'ยื่นคำขอ' },
-                    { id: 2, title: 'กรรมการคณะฯ' },
-                    { id: 3, title: 'ส่งผู้ทรงฯ' },
-                    { id: 4, title: 'ปรับปรุง' },
-                    { id: 5, title: 'แจ้งผล' },
-                    { id: 6, title: step6Title }
+                    { id: 1, title: 'ยื่นคำขอ', icon: 'fa-paper-plane' },
+                    { id: 2, title: 'กรรมการคณะฯ', icon: 'fa-users' },
+                    { id: 3, title: 'ส่งผู้ทรงฯ', icon: 'fa-user-check' },
+                    { id: 4, title: 'ปรับปรุง', icon: 'fa-file-pen' },
+                    { id: 5, title: 'แจ้งผล', icon: 'fa-square-poll-vertical' },
+                    { id: 6, title: step6Title, icon: step6Icon }
                 ];
-
-                container.className = "grid grid-cols-6 gap-2 sm:gap-4 relative text-center";
             }
 
-            // อัปเดต % Badge ด้านบนป๊อปอัป
             if (progressText) progressText.innerText = `${percentage}%`;
             if (progressBadge) {
                 if (evalStatus === 'ไม่ผ่านการประเมิน' || pubStatus === 'นำไปจัดพิมพ์ไม่ได้') {
@@ -2366,28 +2355,45 @@
                 }
             }
 
-            container.innerHTML = mainSteps.map((step) => {
-                const isCompletedStep = step.id <= currentStepIdx;
+            // เรนเดอร์ส่วนของ Step Icons โดยเอาเส้น Progress Bar สีเขียวเชื่อมต่อตรงกลางออก
+            // และเพิ่ม Effect เอาเมาส์ไปวางแล้วตัวไอคอนขยาย (hover:scale-125)
+            let stepsHtml = mainSteps.map((step) => {
+                const isCompleted = step.id < currentStepIdx;
+                const isCurrent = step.id === currentStepIdx;
 
-                let circleClass = 'bg-slate-200 text-slate-500';
-                let textClass = 'text-slate-400 font-normal';
-                let iconContent = step.id;
+                let circleStyle = 'bg-slate-100 text-slate-400 border border-slate-200 hover:border-slate-400 hover:text-slate-600';
+                let textStyle = 'text-slate-400 font-normal group-hover:text-slate-600';
+                let iconHtml = `<i class="fa-solid ${step.icon} text-xs"></i>`;
 
-                if (isCompletedStep) {
-                    circleClass = 'bg-emerald-500 text-white shadow-md';
-                    textClass = 'text-emerald-700 font-semibold';
-                    iconContent = '<i class="fa-solid fa-check text-xs"></i>';
+                if (isCompleted) {
+                    circleStyle = 'bg-emerald-500 text-white shadow-md shadow-emerald-500/30 ring-4 ring-emerald-100 hover:bg-emerald-600';
+                    textStyle = 'text-emerald-600 font-semibold';
+                    iconHtml = '<i class="fa-solid fa-check text-xs"></i>';
+                } else if (isCurrent) {
+                    circleStyle = 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/40 ring-4 ring-emerald-200 hover:bg-emerald-700';
+                    textStyle = 'text-emerald-700 font-bold';
+                    iconHtml = `<i class="fa-solid ${step.icon} text-xs"></i>`;
                 }
 
                 return `
-                    <div class="flex flex-col items-center justify-start">
-                        <div class="w-7 h-7 sm:w-8 sm:h-8 rounded-full ${circleClass} flex items-center justify-center text-xs font-bold mb-1.5 transition-all duration-300">
-                            ${iconContent}
+                    <div class="flex flex-col items-center justify-start group cursor-pointer">
+                        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-full ${circleStyle} flex items-center justify-center transition-all duration-300 transform group-hover:scale-125 group-hover:shadow-lg">
+                            ${iconHtml}
                         </div>
-                        <span class="text-[10px] sm:text-xs ${textClass} leading-tight text-center">${escapeHtml(step.title)}</span>
+                        <span class="text-[10px] sm:text-xs ${textStyle} leading-tight text-center mt-2.5 transition-colors duration-200">${escapeHtml(step.title)}</span>
                     </div>
                 `;
             }).join('');
+
+            const gridColClass = isEbook ? "grid-cols-4" : "grid-cols-6";
+
+            container.innerHTML = `
+                <div class="relative w-full">
+                    <div class="grid ${gridColClass} gap-2 sm:gap-4 relative text-center">
+                        ${stepsHtml}
+                    </div>
+                </div>
+            `;
         }
 
         function copyIsbnText() {
