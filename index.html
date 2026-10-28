@@ -1026,7 +1026,7 @@
         let staffFilteredData = [];
         let teacherFilteredData = [];
         let adminList = [];
-        let activeQuickFilter = 'all';
+        let activeQuickFilter = 'none';
 
         let currentUser = null; 
         let currentRoleSelection = 'teacher';
@@ -1144,10 +1144,12 @@
                 const aCompleted = isCompletedItem(a) ? 1 : 0;
                 const bCompleted = isCompletedItem(b) ? 1 : 0;
 
+                // 1. แยกกลุ่มกำลังดำเนินการ (0) ไว้ด้านบน และกลุ่มเสร็จสิ้นแล้ว (1) ไว้โซนล่างสุด
                 if (aCompleted !== bCompleted) {
                     return aCompleted - bCompleted;
                 }
 
+                // 2. ภายในแต่ละกลุ่ม เรียงรหัสหนังสือ (book_code) จาก มากไปหาน้อย
                 const codeA = (a.book_code || '').trim();
                 const codeB = (b.book_code || '').trim();
                 if (!codeA && !codeB) return 0;
@@ -1773,7 +1775,7 @@
             const ebStatus = document.getElementById('homeEbookStatusFilter')?.value || '';
 
             let rawFiltered = evaluationsData.filter(item => {
-                // แก้ไขเฉพาะการกรองของ 3 การ์ดแรกให้เป็นข้อมูลเฉพาะ Textbook (targetTable === 'evaluation') เท่านั้น
+                // เมื่อกดคลิกคัดกรอง KPI Card
                 if (activeQuickFilter === 'all' && item.targetTable !== 'evaluation') return false;
                 if (activeQuickFilter === 'pending' && (item.targetTable !== 'evaluation' || !isItemPending(item))) return false;
                 if (activeQuickFilter === 'passed' && (item.targetTable !== 'evaluation' || !isItemPassed(item))) return false;
@@ -1828,6 +1830,7 @@
                 return true;
             });
 
+            // จัดเรียงลำดับ: อยู่ระหว่างดำเนินการอยู่บน / ดำเนินการเสร็จสิ้นแล้วอยู่ล่าง และเรียง book_code จากมากไปหาน้อย
             filteredData = sortByBookCodeDesc(rawFiltered);
             homeCurrentPage = 1;
 
@@ -1928,7 +1931,6 @@
         }
 
         function renderKPIs() {
-            // คำนวณจำนวนเฉพาะข้อมูล Textbook เท่านั้นสำหรับการ์ด 1-3
             const textbookData = evaluationsData.filter(i => i.targetTable === 'evaluation');
             const total = textbookData.length;
             const passed = textbookData.filter(i => isItemPassed(i)).length;
@@ -2079,7 +2081,12 @@
         }
 
         function applyQuickFilter(type) {
-            activeQuickFilter = type;
+            // หากคลิกการ์ดเดิมซ้ำ จะเป็นการยกเลิกคัดกรองกลับสู่สถานะรวมข้อมูลทั้งหมด
+            if (activeQuickFilter === type) {
+                activeQuickFilter = 'none';
+            } else {
+                activeQuickFilter = type;
+            }
 
             const cardMap = {
                 'all': { id: 'kpiCard-all', activeClass: 'ring-4 ring-sky-400 border-sky-500 shadow-md bg-sky-50/50' },
@@ -2094,7 +2101,7 @@
                 const card = document.getElementById(cardMap[key].id);
                 if (card) {
                     const activeClasses = cardMap[key].activeClass.split(' ');
-                    if (key === type) {
+                    if (key === activeQuickFilter) {
                         card.classList.add(...activeClasses);
                     } else {
                         card.classList.remove(...activeClasses);
@@ -2106,7 +2113,7 @@
         }
 
         function resetHomeFilters() {
-            activeQuickFilter = 'all';
+            activeQuickFilter = 'none';
             const searchInput = document.getElementById('homeSearchInput');
             const tbYear = document.getElementById('homeTextbookYearFilter');
             const tbDept = document.getElementById('homeTextbookDeptFilter');
