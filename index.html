@@ -107,8 +107,9 @@
 
         <!-- PAGE 1: HOME VIEW -->
         <section id="homeView" class="space-y-6">
-            <!-- 5 KPI CARDS -->
-            <div class="hidden sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+            <!-- 6 KPI CARDS -->
+            <div class="hidden sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3.5">
+                <!-- การ์ด 1: ผู้ขอประเมินทั้งหมด -->
                 <div id="kpiCard-all" onclick="applyQuickFilter('all')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:bg-sky-50 hover:border-sky-300 active:scale-95 group">
                     <div>
                         <p class="text-xs font-bold text-slate-700 mb-1">ผู้ขอประเมินทั้งหมด</p>
@@ -122,19 +123,7 @@
                     </div>
                 </div>
 
-                <div id="kpiCard-passed" onclick="applyQuickFilter('passed')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:bg-emerald-50 hover:border-emerald-300 active:scale-95 group">
-                    <div>
-                        <p class="text-xs font-bold text-emerald-600 mb-1">ผ่านการประเมิน</p>
-                        <h2 class="text-2xl sm:text-3xl font-bold text-emerald-600" id="kpiPassed">0</h2>
-                        <span class="text-[11px] text-emerald-500 group-hover:underline flex items-center mt-2">
-                            <i class="fa-solid fa-filter mr-1"></i> คลิกเพื่อคัดกรอง
-                        </span>
-                    </div>
-                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-500 text-lg sm:text-xl transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12 group-hover:bg-emerald-100">
-                        <i class="fa-solid fa-check-circle"></i>
-                    </div>
-                </div>
-
+                <!-- การ์ด 2: กำลังดำเนินการประเมิน (Textbook) -->
                 <div id="kpiCard-pending" onclick="applyQuickFilter('pending')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:bg-amber-50 hover:border-amber-300 active:scale-95 group">
                     <div>
                         <p class="text-xs font-bold text-amber-600 mb-1">กำลังดำเนินการประเมิน</p>
@@ -148,6 +137,21 @@
                     </div>
                 </div>
 
+                <!-- การ์ด 3: ผ่านการประเมิน -->
+                <div id="kpiCard-passed" onclick="applyQuickFilter('passed')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:bg-emerald-50 hover:border-emerald-300 active:scale-95 group">
+                    <div>
+                        <p class="text-xs font-bold text-emerald-600 mb-1">ผ่านการประเมิน</p>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-emerald-600" id="kpiPassed">0</h2>
+                        <span class="text-[11px] text-emerald-500 group-hover:underline flex items-center mt-2">
+                            <i class="fa-solid fa-filter mr-1"></i> คลิกเพื่อคัดกรอง
+                        </span>
+                    </div>
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-emerald-500 text-lg sm:text-xl transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12 group-hover:bg-emerald-100">
+                        <i class="fa-solid fa-check-circle"></i>
+                    </div>
+                </div>
+
+                <!-- การ์ด 4: รายการ eBook ทั้งหมด -->
                 <div id="kpiCard-ebook_all" onclick="applyQuickFilter('ebook_all')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:bg-purple-50 hover:border-purple-300 active:scale-95 group">
                     <div>
                         <p class="text-xs font-bold text-purple-600 mb-1">รายการ eBook ทั้งหมด</p>
@@ -161,6 +165,21 @@
                     </div>
                 </div>
 
+                <!-- การ์ด 5: eBook กำลังดำเนินการ (เพิ่มใหม่) -->
+                <div id="kpiCard-ebook_pending" onclick="applyQuickFilter('ebook_pending')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:bg-fuchsia-50 hover:border-fuchsia-300 active:scale-95 group">
+                    <div>
+                        <p class="text-xs font-bold text-fuchsia-600 mb-1">eBook กำลังดำเนินการ</p>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-fuchsia-600" id="kpiEbookPending">0</h2>
+                        <span class="text-[11px] text-fuchsia-500 group-hover:underline flex items-center mt-2">
+                            <i class="fa-solid fa-filter mr-1"></i> คลิกเพื่อคัดกรอง
+                        </span>
+                    </div>
+                    <div class="w-10 h-10 sm:w-12 sm:h-12 bg-fuchsia-50 rounded-2xl flex items-center justify-center text-fuchsia-600 text-lg sm:text-xl transition-transform duration-300 group-hover:scale-125 group-hover:rotate-12 group-hover:bg-fuchsia-100">
+                        <i class="fa-solid fa-spinner"></i>
+                    </div>
+                </div>
+
+                <!-- การ์ด 6: eBook เผยแพร่แล้ว -->
                 <div id="kpiCard-ebook_published" onclick="applyQuickFilter('ebook_published')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:bg-indigo-50 hover:border-indigo-300 active:scale-95 group">
                     <div>
                         <p class="text-xs font-bold text-indigo-600 mb-1">eBook เผยแพร่แล้ว</p>
@@ -1183,7 +1202,7 @@
             const isNextDisabled = currentPage === totalPages;
             buttonsHtml += `
                 <button ${isNextDisabled ? 'disabled' : ''} onclick="${changePageFnName}(${currentPage + 1})" 
-                    class="px-3 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center space-x-1">
+                    class="px-3.5 py-1.5 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center space-x-1">
                     <span>ถัดไป</span>
                     <i class="fa-solid fa-chevron-right text-[10px]"></i>
                 </button>
@@ -1737,6 +1756,11 @@
             return !isItemPassed(item) && !isItemFailed(item);
         }
 
+        function isEbookPending(item) {
+            if (item.targetTable !== 'ebook_evaluation') return false;
+            return EBOOK_COPYRIGHT_STEPS.includes(item.evaluation_status) || EBOOK_PRODUCTION_STEPS.includes(item.evaluation_status);
+        }
+
         function filterData() {
             const search = (document.getElementById('homeSearchInput')?.value || '').toLowerCase();
             
@@ -1752,6 +1776,7 @@
                 if (activeQuickFilter === 'passed' && !isItemPassed(item)) return false;
                 if (activeQuickFilter === 'pending' && !isItemPending(item)) return false;
                 if (activeQuickFilter === 'ebook_all' && item.targetTable !== 'ebook_evaluation') return false;
+                if (activeQuickFilter === 'ebook_pending' && !isEbookPending(item)) return false;
                 if (activeQuickFilter === 'ebook_published' && (item.targetTable !== 'ebook_evaluation' || item.publication_status !== 'ดำเนินการสำเร็จ')) return false;
 
                 const matchSearch = !search || 
@@ -1906,18 +1931,21 @@
             const pending = total - (passed + failed);
 
             const ebookTotal = evaluationsData.filter(i => i.targetTable === 'ebook_evaluation').length;
+            const ebookPending = evaluationsData.filter(i => isEbookPending(i)).length;
             const ebookPublished = evaluationsData.filter(i => i.targetTable === 'ebook_evaluation' && i.publication_status === 'ดำเนินการสำเร็จ').length;
 
             const elemTotal = document.getElementById('kpiTotal');
             const elemPassed = document.getElementById('kpiPassed');
             const elemPending = document.getElementById('kpiPending');
             const elemEbookTotal = document.getElementById('kpiEbookTotal');
+            const elemEbookPending = document.getElementById('kpiEbookPending');
             const elemEbookPublished = document.getElementById('kpiEbookPublished');
 
             if (elemTotal) elemTotal.innerText = total;
             if (elemPassed) elemPassed.innerText = passed;
             if (elemPending) elemPending.innerText = pending;
             if (elemEbookTotal) elemEbookTotal.innerText = ebookTotal;
+            if (elemEbookPending) elemEbookPending.innerText = ebookPending;
             if (elemEbookPublished) elemEbookPublished.innerText = ebookPublished;
         }
 
@@ -2050,9 +2078,10 @@
 
             const cardMap = {
                 'all': { id: 'kpiCard-all', activeClass: 'ring-4 ring-sky-400 border-sky-500 shadow-md bg-sky-50/50' },
-                'passed': { id: 'kpiCard-passed', activeClass: 'ring-4 ring-emerald-400 border-emerald-500 shadow-md bg-emerald-50/50' },
                 'pending': { id: 'kpiCard-pending', activeClass: 'ring-4 ring-amber-400 border-amber-500 shadow-md bg-amber-50/50' },
+                'passed': { id: 'kpiCard-passed', activeClass: 'ring-4 ring-emerald-400 border-emerald-500 shadow-md bg-emerald-50/50' },
                 'ebook_all': { id: 'kpiCard-ebook_all', activeClass: 'ring-4 ring-purple-400 border-purple-500 shadow-md bg-purple-50/50' },
+                'ebook_pending': { id: 'kpiCard-ebook_pending', activeClass: 'ring-4 ring-fuchsia-400 border-fuchsia-500 shadow-md bg-fuchsia-50/50' },
                 'ebook_published': { id: 'kpiCard-ebook_published', activeClass: 'ring-4 ring-indigo-400 border-indigo-500 shadow-md bg-indigo-50/50' }
             };
 
