@@ -74,7 +74,6 @@
             background-color: rgba(15, 23, 42, 0.75);
             backdrop-filter: blur(4px);
         }
-        /* ซ่อนลูกศรลงของ Dropdown select ทั้งหมด */
         select {
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -110,7 +109,6 @@
         <section id="homeView" class="space-y-6">
             <!-- 5 KPI CARDS -->
             <div class="hidden sm:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
-                <!-- การ์ด 1: ผู้ขอประเมินทั้งหมด -->
                 <div id="kpiCard-all" onclick="applyQuickFilter('all')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:bg-sky-50 hover:border-sky-300 active:scale-95 group">
                     <div>
                         <p class="text-xs font-bold text-slate-700 mb-1">ผู้ขอประเมินทั้งหมด</p>
@@ -124,7 +122,6 @@
                     </div>
                 </div>
 
-                <!-- การ์ด 2: ผ่านการประเมิน -->
                 <div id="kpiCard-passed" onclick="applyQuickFilter('passed')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:bg-emerald-50 hover:border-emerald-300 active:scale-95 group">
                     <div>
                         <p class="text-xs font-bold text-emerald-600 mb-1">ผ่านการประเมิน</p>
@@ -138,7 +135,6 @@
                     </div>
                 </div>
 
-                <!-- การ์ด 3: กำลังดำเนินการประเมิน -->
                 <div id="kpiCard-pending" onclick="applyQuickFilter('pending')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:bg-amber-50 hover:border-amber-300 active:scale-95 group">
                     <div>
                         <p class="text-xs font-bold text-amber-600 mb-1">กำลังดำเนินการประเมิน</p>
@@ -152,7 +148,6 @@
                     </div>
                 </div>
 
-                <!-- การ์ด 4: รายการ eBook ทั้งหมด -->
                 <div id="kpiCard-ebook_all" onclick="applyQuickFilter('ebook_all')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:bg-purple-50 hover:border-purple-300 active:scale-95 group">
                     <div>
                         <p class="text-xs font-bold text-purple-600 mb-1">รายการ eBook ทั้งหมด</p>
@@ -166,7 +161,6 @@
                     </div>
                 </div>
 
-                <!-- การ์ด 5: eBook เผยแพร่แล้ว -->
                 <div id="kpiCard-ebook_published" onclick="applyQuickFilter('ebook_published')" class="bg-white p-4 sm:p-5 rounded-2xl shadow-sm border border-slate-200/80 flex items-center justify-between cursor-pointer transition-all duration-300 transform hover:-translate-y-1 hover:shadow-lg hover:bg-indigo-50 hover:border-indigo-300 active:scale-95 group">
                     <div>
                         <p class="text-xs font-bold text-indigo-600 mb-1">eBook เผยแพร่แล้ว</p>
@@ -210,7 +204,6 @@
                             <h3 class="text-base text-slate-800">คัดกรองข้อมูลสถานะการประเมิน</h3>
                         </div>
 
-                        <!-- 1. พิมพ์ค้นหา (ค้นหารวม) -->
                         <div>
                             <label for="homeSearchInput" class="block text-xs font-medium text-slate-600 mb-1">พิมพ์ค้นหา</label>
                             <div class="relative">
@@ -219,7 +212,6 @@
                             </div>
                         </div>
 
-                        <!-- 2. คัดกรองข้อมูลการประเมิน Textbook (ดึงจากตาราง evaluation) -->
                         <div class="p-3 bg-blue-50/50 rounded-xl border border-blue-100/80 space-y-2">
                             <p class="text-xs font-bold text-blue-800 flex items-center">
                                 <i class="fa-solid fa-book mr-1.5 text-blue-600"></i>สถานะการประเมิน
@@ -246,7 +238,6 @@
                             </div>
                         </div>
 
-                        <!-- 3. คัดกรองข้อมูลการจัดทำ eBook (ดึงจากตาราง ebook_evaluation) -->
                         <div class="p-3 bg-purple-50/50 rounded-xl border border-purple-100/80 space-y-2">
                             <p class="text-xs font-bold text-purple-800 flex items-center">
                                 <i class="fa-solid fa-tablet-screen-button mr-1.5 text-purple-600"></i>สถานะ eBook
@@ -368,7 +359,6 @@
                             <h3 class="text-base text-slate-800">คัดกรองข้อมูลสถานะการประเมิน</h3>
                         </div>
 
-                        <!-- 1. พิมพ์ค้นหา -->
                         <div>
                             <label for="staffSearchInput" class="block text-xs font-medium text-slate-600 mb-1">พิมพ์ค้นหา</label>
                             <div class="relative">
@@ -377,7 +367,6 @@
                             </div>
                         </div>
 
-                        <!-- 2. คัดกรอง Textbook -->
                         <div class="p-3 bg-blue-50/50 rounded-xl border border-blue-100/80 space-y-2">
                             <p class="text-xs font-bold text-blue-800 flex items-center">
                                 <i class="fa-solid fa-book mr-1.5 text-blue-600"></i>สถานะการประเมิน
@@ -404,7 +393,6 @@
                             </div>
                         </div>
 
-                        <!-- 3. คัดกรอง eBook -->
                         <div class="p-3 bg-purple-50/50 rounded-xl border border-purple-100/80 space-y-2">
                             <p class="text-xs font-bold text-purple-800 flex items-center">
                                 <i class="fa-solid fa-tablet-screen-button mr-1.5 text-purple-600"></i>สถานะ eBook
@@ -698,36 +686,12 @@
                             <label for="formEvalStatus" class="block text-xs font-medium text-slate-700 mb-1">สถานะการดำเนินการ*</label>
                             <select id="formEvalStatus" name="evaluation_status" required class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
                                 <option value="" disabled selected>เลือกสถานะ</option>
-                                <option value="รับเอกสารการประเมิน">รับเอกสารการประเมิน</option>
-                                <option value="สรรหาผู้ทรงคุณวุฒิ">สรรหาผู้ทรงคุณวุฒิ</option>
-                                <option value="เข้ากรรมการคณะ">เข้ากรรมการคณะ</option>
-                                <option value="ส่งเอกสารผู้ทรง รอบ 1">ส่งเอกสารผู้ทรง รอบ 1</option>
-                                <option value="ติดตามผล รอบ 1">ติดตามผล รอบ 1</option>
-                                <option value="รับเอกสารผู้ทรง รอบ 1">รับเอกสารผู้ทรง รอบ 1</option>
-                                <option value="ส่งเอกสารผู้ประเมิน รอบ 1">ส่งเอกสารผู้ประเมิน รอบ 1</option>
-                                <option value="รอการแก้ไข รอบ 1">รอการแก้ไข รอบ 1</option>
-                                <option value="ส่งเอกสารผู้ทรง รอบ 2">ส่งเอกสารผู้ทรง รอบ 2</option>
-                                <option value="ติดตามผล รอบ 2">ติดตามผล รอบ 2</option>
-                                <option value="รับเอกสารผู้ทรง รอบ 2">รับเอกสารผู้ทรง รอบ 2</option>
-                                <option value="ส่งเอกสารผู้ประเมิน รอบ 2">ส่งเอกสารผู้ประเมิน รอบ 2</option>
-                                <option value="รอการแก้ไข รอบ 2">รอการแก้ไข รอบ 2</option>
-                                <option value="สรุปผลการประเมิน">สรุปผลการประเมิน</option>
-                                <option value="เข้ากรรมการคณะสรุปผล">เข้ากรรมการคณะสรุปผล</option>
-                                <option value="ผ่านการประเมิน">ผ่านการประเมิน</option>
-                                <option value="ไม่ผ่านการประเมิน">ไม่ผ่านการประเมิน</option>
                             </select>
                         </div>
                         <div>
                             <label for="formPubStatus" class="block text-xs font-medium text-slate-700 mb-1">สถานะการผลิต*</label>
                             <select id="formPubStatus" name="publication_status" required class="w-full px-3 py-2 bg-white border border-slate-200 rounded-xl text-xs">
                                 <option value="" disabled selected>เลือกสถานะ</option>
-                                <option value="อยู่ระหว่างการประเมิน">อยู่ระหว่างการประเมิน</option>
-                                <option value="รอจัดพิมพ์">รอจัดพิมพ์</option>
-                                <option value="กำลังจัดพิมพ์">กำลังจัดพิมพ์</option>
-                                <option value="นำไปจัดพิมพ์ได้">นำไปจัดพิมพ์ได้</option>
-                                <option value="นำไปจัดพิมพ์ไม่ได้">นำไปจัดพิมพ์ไม่ได้</option>
-                                <option value="จัดพิมพ์เอง">จัดพิมพ์เอง</option>
-                                <option value="พร้อมขึ้นระบบ eBook">พร้อมขึ้นระบบ eBook</option>
                             </select>
                         </div>
                         <div>
@@ -895,7 +859,6 @@
     <div id="toastContainer" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
 
     <script>
-        // List groups definition for filtering logic
         const TEXTBOOK_PENDING_STEPS = [
             'รับเอกสารการประเมิน',
             'สรรหาผู้ทรงคุณวุฒิ',
@@ -930,7 +893,6 @@
             'ส่ง e-Office (KLLC)'
         ];
 
-        // Options predefined for Textbook (evaluation)
         const TEXTBOOK_EVAL_STATUSES = [
             ...TEXTBOOK_PENDING_STEPS,
             'ผ่านการประเมิน',
@@ -947,7 +909,6 @@
             'พร้อมขึ้นระบบ eBook'
         ];
 
-        // Options predefined for eBook (ebook_evaluation)
         const EBOOK_EVAL_STATUSES = [
             ...EBOOK_COPYRIGHT_STEPS,
             ...EBOOK_PRODUCTION_STEPS,
@@ -989,7 +950,6 @@
             }
         }
 
-        // Secure Runtime Configuration Loader
         const getSecureConfig = () => {
             const decodeSecret = (str) => {
                 try { return atob(str); } catch (e) { return str; }
@@ -1144,7 +1104,6 @@
             return false;
         }
 
-        // ตรวจสอบว่าเป็นรายการที่เสร็จสิ้น/Inactive แล้วหรือไม่
         function isCompletedItem(item) {
             if (!item) return false;
             const isEbook = (item.targetTable === 'ebook_evaluation');
@@ -1161,18 +1120,15 @@
             }
         }
 
-        // เรียงลำดับข้อมูลสองระดับ: 1. แยกตามกลุ่มสถานะความคืบหน้า (Active ก่อน Completed) 2. เรียง book_code จากมากไปหาน้อย
         function sortByBookCodeDesc(list) {
             return [...list].sort((a, b) => {
                 const aCompleted = isCompletedItem(a) ? 1 : 0;
                 const bCompleted = isCompletedItem(b) ? 1 : 0;
 
-                // 1. Primary Order: ดำเนินการอยู่ (0) มาก่อน ดำเนินการเสร็จสิ้น (1)
                 if (aCompleted !== bCompleted) {
                     return aCompleted - bCompleted;
                 }
 
-                // 2. Secondary Order: เรียงรหัสหนังสือ (book_code) จากมากไปหาน้อย
                 const codeA = (a.book_code || '').trim();
                 const codeB = (b.book_code || '').trim();
                 if (!codeA && !codeB) return 0;
@@ -2084,7 +2040,7 @@
             const select = document.getElementById(selectId);
             if (!select) return;
             const currentVal = select.value;
-            select.innerHTML = `<option value="">${defaultText}</option>` +
+            select.innerHTML = `<option value="">${escapeHtml(defaultText)}</option>` +
                 items.map(item => `<option value="${escapeHtml(item)}">${escapeHtml(item)}</option>`).join('');
             select.value = currentVal;
         }
@@ -2144,7 +2100,6 @@
             if (status === 'ไม่ผ่านการประเมิน') {
                 return `<span class="px-2.5 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-semibold inline-flex items-center space-x-1 whitespace-nowrap"><i class="fa-solid fa-circle-xmark text-[10px]"></i><span>ไม่ผ่านการประเมิน</span></span>`;
             }
-            // แทรกเพิ่มตรงนี้ (ก่อนถึง return บรรทัดสุดท้าย)
             if (EBOOK_PRODUCTION_STEPS.includes(status) || status === 'จัดทำ eBook') {
                 return `<span class="px-2.5 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold inline-flex items-center space-x-1 whitespace-nowrap"><i class="fa-solid fa-hourglass-half text-[10px]"></i><span class="whitespace-nowrap">${escapeHtml(status)}</span></span>`;
             }
@@ -2416,8 +2371,6 @@
                 }
             }
 
-            // เรนเดอร์ส่วนของ Step Icons โดยเอาเส้น Progress Bar สีเขียวเชื่อมต่อตรงกลางออก
-            // และเพิ่ม Effect เอาเมาส์ไปวางแล้วตัวไอคอนขยาย (hover:scale-125)
             let stepsHtml = mainSteps.map((step) => {
                 const isCompleted = step.id < currentStepIdx;
                 const isCurrent = step.id === currentStepIdx;
