@@ -2144,6 +2144,10 @@
             if (status === 'ไม่ผ่านการประเมิน') {
                 return `<span class="px-2.5 py-1 bg-rose-100 text-rose-700 rounded-full text-xs font-semibold inline-flex items-center space-x-1 whitespace-nowrap"><i class="fa-solid fa-circle-xmark text-[10px]"></i><span>ไม่ผ่านการประเมิน</span></span>`;
             }
+            // แทรกเพิ่มตรงนี้ (ก่อนถึง return บรรทัดสุดท้าย)
+            if (EBOOK_PRODUCTION_STEPS.includes(status) || status === 'จัดทำ eBook') {
+                return `<span class="px-2.5 py-1 bg-purple-100 text-purple-700 rounded-full text-xs font-semibold inline-flex items-center space-x-1 whitespace-nowrap"><i class="fa-solid fa-hourglass-half text-[10px]"></i><span class="whitespace-nowrap">${escapeHtml(status)}</span></span>`;
+            }
             return `<span class="px-2.5 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-semibold inline-flex items-center space-x-1 whitespace-nowrap"><i class="fa-solid fa-hourglass-half text-[10px]"></i><span class="whitespace-nowrap">${escapeHtml(status)}</span></span>`;
         }
 
