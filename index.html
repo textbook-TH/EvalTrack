@@ -2147,7 +2147,35 @@
             return `<span class="px-2.5 py-1 bg-amber-100 text-amber-700 rounded-full text-xs font-semibold inline-flex items-center space-x-1 whitespace-nowrap"><i class="fa-solid fa-hourglass-half text-[10px]"></i><span class="whitespace-nowrap">${escapeHtml(status)}</span></span>`;
         }
 
-        function getMobileStatusBadge(status) {
+        function getMobileStatusBadge(status, item) {
+            if (!status) {
+                return `<span class="w-7 h-7 bg-slate-100 text-slate-600 rounded-full inline-flex items-center justify-center text-xs font-semibold"><i class="fa-solid fa-minus"></i></span>`;
+            }
+
+            const isEbook = item && item.targetTable === 'ebook_evaluation';
+
+            if (isEbook) {
+                if (status === 'จัดจำหน่ายผ่าน SE-ED' || status === 'ดำเนินการสำเร็จ') {
+                    return `<span class="w-7 h-7 bg-emerald-100 text-emerald-600 rounded-full inline-flex items-center justify-center text-xs font-semibold" title="จัดจำหน่ายผ่าน SE-ED"><i class="fa-solid fa-circle-check"></i></span>`;
+                }
+                if (EBOOK_PRODUCTION_STEPS.includes(status)) {
+                    return `<span class="w-7 h-7 bg-purple-100 text-purple-600 rounded-full inline-flex items-center justify-center text-xs font-semibold" title="จัดทำ eBook"><i class="fa-solid fa-hourglass-half"></i></span>`;
+                }
+                if (EBOOK_COPYRIGHT_STEPS.includes(status)) {
+                    return `<span class="w-7 h-7 bg-amber-100 text-amber-500 rounded-full inline-flex items-center justify-center text-xs font-semibold" title="ดำเนินการจดลิขสิทธิ์"><i class="fa-solid fa-hourglass-half"></i></span>`;
+                }
+            } else {
+                if (status === 'ผ่านการประเมิน') {
+                    return `<span class="w-7 h-7 bg-emerald-100 text-emerald-600 rounded-full inline-flex items-center justify-center text-xs font-semibold" title="ผ่านการประเมิน"><i class="fa-solid fa-circle-check"></i></span>`;
+                }
+                if (status === 'ไม่ผ่านการประเมิน') {
+                    return `<span class="w-7 h-7 bg-rose-100 text-rose-600 rounded-full inline-flex items-center justify-center text-xs font-semibold" title="ไม่ผ่านการประเมิน"><i class="fa-solid fa-circle-xmark"></i></span>`;
+                }
+                if (TEXTBOOK_PENDING_STEPS.includes(status) || isItemPending({ evaluation_status: status })) {
+                    return `<span class="w-7 h-7 bg-amber-100 text-amber-500 rounded-full inline-flex items-center justify-center text-xs font-semibold" title="${escapeHtml(status)}"><i class="fa-solid fa-hourglass-half"></i></span>`;
+                }
+            }
+
             return getStatusBadge(status);
         }
 
@@ -2552,7 +2580,7 @@
                             <span class="font-mono font-bold text-xs text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-100">
                                 ${escapeHtml(item.book_code) || '-'}
                             </span>
-                            ${getMobileStatusBadge(item.evaluation_status)}
+                            ${getMobileStatusBadge(item.evaluation_status, item)}
                         </div>
 
                         <div>
@@ -2703,7 +2731,7 @@
                             <span class="font-mono font-bold text-xs text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-100">
                                 ${escapeHtml(item.book_code) || '-'}
                             </span>
-                            ${getMobileStatusBadge(item.evaluation_status)}
+                            ${getMobileStatusBadge(item.evaluation_status, item)}
                         </div>
 
                         <div class="cursor-pointer" onclick="openDetailModal(${item.id}, '${safeTargetTable}')">
@@ -2856,7 +2884,7 @@
                             <span class="font-mono font-bold text-xs text-blue-600 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-100">
                                 ${escapeHtml(item.book_code) || '-'}
                             </span>
-                            ${getMobileStatusBadge(item.evaluation_status)}
+                            ${getMobileStatusBadge(item.evaluation_status, item)}
                         </div>
 
                         <div class="cursor-pointer" onclick="openDetailModal(${item.id}, '${safeTargetTable}')">
