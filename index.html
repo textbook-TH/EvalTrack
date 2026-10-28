@@ -209,13 +209,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center justify-center space-x-4 text-xs font-medium text-slate-600 mt-4 pt-4 border-t border-slate-100">
-                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1.5"></span>ผ่าน (<span id="legendPassed">0</span>)</span>
-                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 mr-1.5"></span>กำลังทำ (<span id="legendPending">0</span>)</span>
-                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 mr-1.5"></span>ไม่ผ่าน (<span id="legendFailed">0</span>)</span>
-                    </div>
-                </div>
-
                 <div class="lg:col-span-8 bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 flex flex-col justify-between">
                     <div class="space-y-4">
                         <div class="flex items-center space-x-2 text-blue-600 font-bold mb-2">
@@ -364,10 +357,22 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center justify-center space-x-4 text-xs font-medium text-slate-600 mt-4 pt-4 border-t border-slate-100">
-                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1.5"></span>ผ่าน (<span id="staffLegendPassed">0</span>)</span>
-                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 mr-1.5"></span>กำลังทำ (<span id="staffLegendPending">0</span>)</span>
-                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 mr-1.5"></span>ไม่ผ่าน (<span id="staffLegendFailed">0</span>)</span>
+                    <div class="space-y-2 mt-4 pt-4 border-t border-slate-100 text-xs font-medium text-slate-600">
+                        <!-- กลุ่มที่ 1: Textbook -->
+                        <div class="flex items-center justify-center space-x-2 flex-wrap">
+                            <span class="font-bold text-slate-700">textbook:</span>
+                            <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-sky-500 mr-1"></span>รายการ (<span id="staffLegendTotal">0</span>)</span>
+                            <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 mr-1"></span>กำลังทำ (<span id="staffLegendPending">0</span>)</span>
+                            <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1"></span>ผ่าน (<span id="staffLegendPassed">0</span>)</span>
+                            <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 mr-1"></span>ไม่ผ่าน (<span id="staffLegendFailed">0</span>)</span>
+                        </div>
+                        <!-- กลุ่มที่ 2: eBook -->
+                        <div class="flex items-center justify-center space-x-2 flex-wrap">
+                            <span class="font-bold text-slate-700">eBook:</span>
+                            <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-purple-600 mr-1"></span>รายการ (<span id="staffLegendEbookTotal">0</span>)</span>
+                            <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-fuchsia-500 mr-1"></span>กำลังทำ (<span id="staffLegendEbookPending">0</span>)</span>
+                            <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-indigo-600 mr-1"></span>จำหน่าย (<span id="staffLegendEbookPublished">0</span>)</span>
+                        </div>
                     </div>
                 </div>
 
@@ -1144,12 +1149,10 @@
                 const aCompleted = isCompletedItem(a) ? 1 : 0;
                 const bCompleted = isCompletedItem(b) ? 1 : 0;
 
-                // 1. แยกกลุ่มกำลังดำเนินการ (0) ไว้ด้านบน และกลุ่มเสร็จสิ้นแล้ว (1) ไว้โซนล่างสุด
                 if (aCompleted !== bCompleted) {
                     return aCompleted - bCompleted;
                 }
 
-                // 2. ภายในแต่ละกลุ่ม เรียงรหัสหนังสือ (book_code) จาก มากไปหาน้อย
                 const codeA = (a.book_code || '').trim();
                 const codeB = (b.book_code || '').trim();
                 if (!codeA && !codeB) return 0;
@@ -1775,7 +1778,6 @@
             const ebStatus = document.getElementById('homeEbookStatusFilter')?.value || '';
 
             let rawFiltered = evaluationsData.filter(item => {
-                // เมื่อกดคลิกคัดกรอง KPI Card
                 if (activeQuickFilter === 'all' && item.targetTable !== 'evaluation') return false;
                 if (activeQuickFilter === 'pending' && (item.targetTable !== 'evaluation' || !isItemPending(item))) return false;
                 if (activeQuickFilter === 'passed' && (item.targetTable !== 'evaluation' || !isItemPassed(item))) return false;
@@ -1830,7 +1832,6 @@
                 return true;
             });
 
-            // จัดเรียงลำดับ: อยู่ระหว่างดำเนินการอยู่บน / ดำเนินการเสร็จสิ้นแล้วอยู่ล่าง และเรียง book_code จากมากไปหาน้อย
             filteredData = sortByBookCodeDesc(rawFiltered);
             homeCurrentPage = 1;
 
@@ -1960,18 +1961,37 @@
             const chartCanvas = document.getElementById('statusChart');
             if (!chartCanvas || typeof Chart === 'undefined') return;
 
-            const passed = filteredData.filter(i => isItemPassed(i)).length;
-            const failed = filteredData.filter(i => isItemFailed(i)).length;
-            const pending = filteredData.length - (passed + failed);
+            const textbookData = filteredData.filter(i => i.targetTable === 'evaluation');
+            const tbTotal = textbookData.length;
+            const tbPassed = textbookData.filter(i => isItemPassed(i)).length;
+            const tbFailed = textbookData.filter(i => isItemFailed(i)).length;
+            const tbPending = tbTotal - (tbPassed + tbFailed);
 
-            const legPassed = document.getElementById('legendPassed');
+            const ebookData = filteredData.filter(i => i.targetTable === 'ebook_evaluation');
+            const ebTotal = ebookData.length;
+            const ebPending = filteredData.filter(i => isEbookPending(i)).length;
+            const ebPublished = filteredData.filter(i => i.targetTable === 'ebook_evaluation' && i.publication_status === 'ดำเนินการสำเร็จ').length;
+
+            const legTotal = document.getElementById('legendTotal');
             const legPending = document.getElementById('legendPending');
+            const legPassed = document.getElementById('legendPassed');
             const legFailed = document.getElementById('legendFailed');
+
+            const legEbTotal = document.getElementById('legendEbookTotal');
+            const legEbPending = document.getElementById('legendEbookPending');
+            const legEbPublished = document.getElementById('legendEbookPublished');
+
             const chartCenter = document.getElementById('chartCenterTotal');
 
-            if (legPassed) legPassed.innerText = passed;
-            if (legPending) legPending.innerText = pending;
-            if (legFailed) legFailed.innerText = failed;
+            if (legTotal) legTotal.innerText = tbTotal;
+            if (legPending) legPending.innerText = tbPending;
+            if (legPassed) legPassed.innerText = tbPassed;
+            if (legFailed) legFailed.innerText = tbFailed;
+
+            if (legEbTotal) legEbTotal.innerText = ebTotal;
+            if (legEbPending) legEbPending.innerText = ebPending;
+            if (legEbPublished) legEbPublished.innerText = ebPublished;
+
             if (chartCenter) chartCenter.innerText = filteredData.length;
 
             const ctx = chartCanvas.getContext('2d');
@@ -1982,10 +2002,10 @@
             statusChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['ผ่าน', 'กำลังทำ', 'ไม่ผ่าน'],
+                    labels: ['ผ่าน', 'กำลังทำ', 'ไม่ผ่าน', 'eBook กำลังทำ', 'จัดจำหน่าย'],
                     datasets: [{
-                        data: [passed, pending, failed],
-                        backgroundColor: ['#10b981', '#fbbf24', '#f43f5e'],
+                        data: [tbPassed, tbPending, tbFailed, ebPending, ebPublished],
+                        backgroundColor: ['#10b981', '#fbbf24', '#f43f5e', '#d946ef', '#4f46e5'],
                         borderWidth: 0,
                         hoverOffset: 4
                     }]
@@ -2006,18 +2026,37 @@
             const chartCanvas = document.getElementById('staffStatusChart');
             if (!chartCanvas || typeof Chart === 'undefined') return;
 
-            const passed = staffFilteredData.filter(i => isItemPassed(i)).length;
-            const failed = staffFilteredData.filter(i => isItemFailed(i)).length;
-            const pending = staffFilteredData.length - (passed + failed);
+            const textbookData = staffFilteredData.filter(i => i.targetTable === 'evaluation');
+            const tbTotal = textbookData.length;
+            const tbPassed = textbookData.filter(i => isItemPassed(i)).length;
+            const tbFailed = textbookData.filter(i => isItemFailed(i)).length;
+            const tbPending = tbTotal - (tbPassed + tbFailed);
 
-            const legPassed = document.getElementById('staffLegendPassed');
+            const ebookData = staffFilteredData.filter(i => i.targetTable === 'ebook_evaluation');
+            const ebTotal = ebookData.length;
+            const ebPending = staffFilteredData.filter(i => isEbookPending(i)).length;
+            const ebPublished = staffFilteredData.filter(i => i.targetTable === 'ebook_evaluation' && i.publication_status === 'ดำเนินการสำเร็จ').length;
+
+            const legTotal = document.getElementById('staffLegendTotal');
             const legPending = document.getElementById('staffLegendPending');
+            const legPassed = document.getElementById('staffLegendPassed');
             const legFailed = document.getElementById('staffLegendFailed');
+
+            const legEbTotal = document.getElementById('staffLegendEbookTotal');
+            const legEbPending = document.getElementById('staffLegendEbookPending');
+            const legEbPublished = document.getElementById('staffLegendEbookPublished');
+
             const chartCenter = document.getElementById('staffChartCenterTotal');
 
-            if (legPassed) legPassed.innerText = passed;
-            if (legPending) legPending.innerText = pending;
-            if (legFailed) legFailed.innerText = failed;
+            if (legTotal) legTotal.innerText = tbTotal;
+            if (legPending) legPending.innerText = tbPending;
+            if (legPassed) legPassed.innerText = tbPassed;
+            if (legFailed) legFailed.innerText = tbFailed;
+
+            if (legEbTotal) legEbTotal.innerText = ebTotal;
+            if (legEbPending) legEbPending.innerText = ebPending;
+            if (legEbPublished) legEbPublished.innerText = ebPublished;
+
             if (chartCenter) chartCenter.innerText = staffFilteredData.length;
 
             const ctx = chartCanvas.getContext('2d');
@@ -2028,10 +2067,10 @@
             staffStatusChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['ผ่าน', 'กำลังทำ', 'ไม่ผ่าน'],
+                    labels: ['ผ่าน', 'กำลังทำ', 'ไม่ผ่าน', 'eBook กำลังทำ', 'จัดจำหน่าย'],
                     datasets: [{
-                        data: [passed, pending, failed],
-                        backgroundColor: ['#10b981', '#fbbf24', '#f43f5e'],
+                        data: [tbPassed, tbPending, tbFailed, ebPending, ebPublished],
+                        backgroundColor: ['#10b981', '#fbbf24', '#f43f5e', '#d946ef', '#4f46e5'],
                         borderWidth: 0,
                         hoverOffset: 4
                     }]
@@ -2081,7 +2120,6 @@
         }
 
         function applyQuickFilter(type) {
-            // หากคลิกการ์ดเดิมซ้ำ จะเป็นการยกเลิกคัดกรองกลับสู่สถานะรวมข้อมูลทั้งหมด
             if (activeQuickFilter === type) {
                 activeQuickFilter = 'none';
             } else {
