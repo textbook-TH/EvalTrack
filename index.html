@@ -915,6 +915,7 @@
         ];
 
         const EBOOK_COPYRIGHT_STEPS = [
+            'ยื่นจดลิขสิทธิ์',
             'รับเอกสารจดแจ้งลิขสิทธิ์',
             'เตรียมเอกสารจดแจ้งลิขสิทธิ์',
             'ส่ง e-Office (Kris)',
@@ -923,6 +924,7 @@
         ];
 
         const EBOOK_PRODUCTION_STEPS = [
+            'จัดทำ eBook',
             'ขอรหัส e-ISBN',
             'เตรียมเอกสารทำ eBook',
             'ส่ง e-Office (KLLC)'
@@ -1142,8 +1144,35 @@
             return false;
         }
 
+        // ตรวจสอบว่าเป็นรายการที่เสร็จสิ้น/Inactive แล้วหรือไม่
+        function isCompletedItem(item) {
+            if (!item) return false;
+            const isEbook = (item.targetTable === 'ebook_evaluation');
+            const evalStatus = (item.evaluation_status || '').trim();
+            const pubStatus = (item.publication_status || '').trim();
+
+            if (isEbook) {
+                return evalStatus === 'จัดจำหน่ายผ่าน SE-ED' || pubStatus === 'ดำเนินการสำเร็จ';
+            } else {
+                return evalStatus === 'ผ่านการประเมิน' || 
+                       evalStatus === 'ไม่ผ่านการประเมิน' || 
+                       pubStatus === 'นำไปจัดพิมพ์ได้' || 
+                       pubStatus === 'นำไปจัดพิมพ์ไม่ได้';
+            }
+        }
+
+        // เรียงลำดับข้อมูลสองระดับ: 1. แยกตามกลุ่มสถานะความคืบหน้า (Active ก่อน Completed) 2. เรียง book_code จากมากไปหาน้อย
         function sortByBookCodeDesc(list) {
             return [...list].sort((a, b) => {
+                const aCompleted = isCompletedItem(a) ? 1 : 0;
+                const bCompleted = isCompletedItem(b) ? 1 : 0;
+
+                // 1. Primary Order: ดำเนินการอยู่ (0) มาก่อน ดำเนินการเสร็จสิ้น (1)
+                if (aCompleted !== bCompleted) {
+                    return aCompleted - bCompleted;
+                }
+
+                // 2. Secondary Order: เรียงรหัสหนังสือ (book_code) จากมากไปหาน้อย
                 const codeA = (a.book_code || '').trim();
                 const codeB = (b.book_code || '').trim();
                 if (!codeA && !codeB) return 0;
