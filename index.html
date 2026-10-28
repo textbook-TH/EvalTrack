@@ -1773,8 +1773,11 @@
             const ebStatus = document.getElementById('homeEbookStatusFilter')?.value || '';
 
             let rawFiltered = evaluationsData.filter(item => {
-                if (activeQuickFilter === 'passed' && !isItemPassed(item)) return false;
-                if (activeQuickFilter === 'pending' && !isItemPending(item)) return false;
+                // แก้ไขเฉพาะการกรองของ 3 การ์ดแรกให้เป็นข้อมูลเฉพาะ Textbook (targetTable === 'evaluation') เท่านั้น
+                if (activeQuickFilter === 'all' && item.targetTable !== 'evaluation') return false;
+                if (activeQuickFilter === 'pending' && (item.targetTable !== 'evaluation' || !isItemPending(item))) return false;
+                if (activeQuickFilter === 'passed' && (item.targetTable !== 'evaluation' || !isItemPassed(item))) return false;
+
                 if (activeQuickFilter === 'ebook_all' && item.targetTable !== 'ebook_evaluation') return false;
                 if (activeQuickFilter === 'ebook_pending' && !isEbookPending(item)) return false;
                 if (activeQuickFilter === 'ebook_published' && (item.targetTable !== 'ebook_evaluation' || item.publication_status !== 'ดำเนินการสำเร็จ')) return false;
@@ -1925,9 +1928,11 @@
         }
 
         function renderKPIs() {
-            const total = evaluationsData.length;
-            const passed = evaluationsData.filter(i => isItemPassed(i)).length;
-            const failed = evaluationsData.filter(i => isItemFailed(i)).length;
+            // คำนวณจำนวนเฉพาะข้อมูล Textbook เท่านั้นสำหรับการ์ด 1-3
+            const textbookData = evaluationsData.filter(i => i.targetTable === 'evaluation');
+            const total = textbookData.length;
+            const passed = textbookData.filter(i => isItemPassed(i)).length;
+            const failed = textbookData.filter(i => isItemFailed(i)).length;
             const pending = total - (passed + failed);
 
             const ebookTotal = evaluationsData.filter(i => i.targetTable === 'ebook_evaluation').length;
