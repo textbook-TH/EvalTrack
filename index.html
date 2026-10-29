@@ -209,10 +209,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center justify-center space-x-4 text-xs font-medium text-slate-600 mt-4 pt-4 border-t border-slate-100">
-                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1.5"></span>ผ่าน (<span id="legendPassed">0</span>)</span>
-                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 mr-1.5"></span>กำลังทำ (<span id="legendPending">0</span>)</span>
-                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 mr-1.5"></span>ไม่ผ่าน (<span id="legendFailed">0</span>)</span>
+                    <div class="flex items-center justify-center space-x-2.5 sm:space-x-3 text-[11px] font-medium text-slate-600 mt-4 pt-4 border-t border-slate-100 flex-wrap gap-y-1.5">
+                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-blue-500 mr-1"></span>รายการ (<span id="legendTotal">0</span>)</span>
+                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 mr-1"></span>กำลังทำ (<span id="legendPending">0</span>)</span>
+                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1"></span>เสร็จสิ้น (<span id="legendPassed">0</span>)</span>
+                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 mr-1"></span>ไม่ผ่าน (<span id="legendFailed">0</span>)</span>
                     </div>
                 </div>
 
@@ -364,10 +365,11 @@
                             </div>
                         </div>
                     </div>
-                    <div class="flex items-center justify-center space-x-4 text-xs font-medium text-slate-600 mt-4 pt-4 border-t border-slate-100">
-                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1.5"></span>ผ่าน (<span id="staffLegendPassed">0</span>)</span>
-                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 mr-1.5"></span>กำลังทำ (<span id="staffLegendPending">0</span>)</span>
-                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 mr-1.5"></span>ไม่ผ่าน (<span id="staffLegendFailed">0</span>)</span>
+                    <div class="flex items-center justify-center space-x-2.5 sm:space-x-3 text-[11px] font-medium text-slate-600 mt-4 pt-4 border-t border-slate-100 flex-wrap gap-y-1.5">
+                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-blue-500 mr-1"></span>รายการ (<span id="staffLegendTotal">0</span>)</span>
+                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-amber-400 mr-1"></span>กำลังทำ (<span id="staffLegendPending">0</span>)</span>
+                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1"></span>เสร็จสิ้น (<span id="staffLegendPassed">0</span>)</span>
+                        <span class="flex items-center"><span class="w-2.5 h-2.5 rounded-full bg-rose-500 mr-1"></span>ไม่ผ่าน (<span id="staffLegendFailed">0</span>)</span>
                     </div>
                 </div>
 
@@ -1956,23 +1958,41 @@
             if (elemEbookPublished) elemEbookPublished.innerText = ebookPublished;
         }
 
+        function computeChartDataset(sourceData) {
+            let scopeData = sourceData;
+            
+            // สวิชกลุ่มข้อมูลตาม KPI Card ที่เลือกเพื่อใช้สร้างสัดส่วนบนกราฟ
+            if (activeQuickFilter === 'all' || activeQuickFilter === 'pending' || activeQuickFilter === 'passed') {
+                scopeData = sourceData.filter(i => i.targetTable === 'evaluation');
+            } else if (activeQuickFilter === 'ebook_all' || activeQuickFilter === 'ebook_pending' || activeQuickFilter === 'ebook_published') {
+                scopeData = sourceData.filter(i => i.targetTable === 'ebook_evaluation');
+            }
+
+            const total = scopeData.length;
+            const pending = scopeData.filter(i => isItemPending(i)).length;
+            const passed = scopeData.filter(i => isItemPassed(i)).length;
+            const failed = scopeData.filter(i => isItemFailed(i)).length;
+
+            return { total, pending, passed, failed };
+        }
+
         function renderChart() {
             const chartCanvas = document.getElementById('statusChart');
             if (!chartCanvas || typeof Chart === 'undefined') return;
 
-            const passed = filteredData.filter(i => isItemPassed(i)).length;
-            const failed = filteredData.filter(i => isItemFailed(i)).length;
-            const pending = filteredData.length - (passed + failed);
+            const stats = computeChartDataset(filteredData);
 
+            const legTotal = document.getElementById('legendTotal');
             const legPassed = document.getElementById('legendPassed');
             const legPending = document.getElementById('legendPending');
             const legFailed = document.getElementById('legendFailed');
             const chartCenter = document.getElementById('chartCenterTotal');
 
-            if (legPassed) legPassed.innerText = passed;
-            if (legPending) legPending.innerText = pending;
-            if (legFailed) legFailed.innerText = failed;
-            if (chartCenter) chartCenter.innerText = filteredData.length;
+            if (legTotal) legTotal.innerText = stats.total;
+            if (legPassed) legPassed.innerText = stats.passed;
+            if (legPending) legPending.innerText = stats.pending;
+            if (legFailed) legFailed.innerText = stats.failed;
+            if (chartCenter) chartCenter.innerText = stats.total;
 
             const ctx = chartCanvas.getContext('2d');
             if (statusChartInstance) {
@@ -1982,10 +2002,10 @@
             statusChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['ผ่าน', 'กำลังทำ', 'ไม่ผ่าน'],
+                    labels: ['รายการรวม', 'กำลังทำ', 'เสร็จสิ้น', 'ไม่ผ่าน'],
                     datasets: [{
-                        data: [passed, pending, failed],
-                        backgroundColor: ['#10b981', '#fbbf24', '#f43f5e'],
+                        data: [stats.total, stats.pending, stats.passed, stats.failed],
+                        backgroundColor: ['#3b82f6', '#fbbf24', '#10b981', '#f43f5e'],
                         borderWidth: 0,
                         hoverOffset: 4
                     }]
@@ -2006,19 +2026,19 @@
             const chartCanvas = document.getElementById('staffStatusChart');
             if (!chartCanvas || typeof Chart === 'undefined') return;
 
-            const passed = staffFilteredData.filter(i => isItemPassed(i)).length;
-            const failed = staffFilteredData.filter(i => isItemFailed(i)).length;
-            const pending = staffFilteredData.length - (passed + failed);
+            const stats = computeChartDataset(staffFilteredData);
 
+            const legTotal = document.getElementById('staffLegendTotal');
             const legPassed = document.getElementById('staffLegendPassed');
             const legPending = document.getElementById('staffLegendPending');
             const legFailed = document.getElementById('staffLegendFailed');
             const chartCenter = document.getElementById('staffChartCenterTotal');
 
-            if (legPassed) legPassed.innerText = passed;
-            if (legPending) legPending.innerText = pending;
-            if (legFailed) legFailed.innerText = failed;
-            if (chartCenter) chartCenter.innerText = staffFilteredData.length;
+            if (legTotal) legTotal.innerText = stats.total;
+            if (legPassed) legPassed.innerText = stats.passed;
+            if (legPending) legPending.innerText = stats.pending;
+            if (legFailed) legFailed.innerText = stats.failed;
+            if (chartCenter) chartCenter.innerText = stats.total;
 
             const ctx = chartCanvas.getContext('2d');
             if (staffStatusChartInstance) {
@@ -2028,10 +2048,10 @@
             staffStatusChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['ผ่าน', 'กำลังทำ', 'ไม่ผ่าน'],
+                    labels: ['รายการรวม', 'กำลังทำ', 'เสร็จสิ้น', 'ไม่ผ่าน'],
                     datasets: [{
-                        data: [passed, pending, failed],
-                        backgroundColor: ['#10b981', '#fbbf24', '#f43f5e'],
+                        data: [stats.total, stats.pending, stats.passed, stats.failed],
+                        backgroundColor: ['#3b82f6', '#fbbf24', '#10b981', '#f43f5e'],
                         borderWidth: 0,
                         hoverOffset: 4
                     }]
