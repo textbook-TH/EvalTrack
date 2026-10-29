@@ -1968,7 +1968,10 @@
                 scopeData = sourceData.filter(i => i.targetTable === 'ebook_evaluation');
             }
 
-            const total = scopeData.length;
+            const total = (activeQuickFilter === 'pending' || activeQuickFilter === 'passed' || activeQuickFilter === 'ebook_pending' || activeQuickFilter === 'ebook_published') 
+                ? 0 
+                : scopeData.length;
+
             const pending = scopeData.filter(i => isItemPending(i)).length;
             const passed = scopeData.filter(i => isItemPassed(i)).length;
             const failed = scopeData.filter(i => isItemFailed(i)).length;
@@ -1992,7 +1995,13 @@
             if (legPassed) legPassed.innerText = stats.passed;
             if (legPending) legPending.innerText = stats.pending;
             if (legFailed) legFailed.innerText = stats.failed;
-            if (chartCenter) chartCenter.innerText = stats.total;
+            
+            // คำนวณจำนวนรายการรวมกลางวงกราฟ
+            const centerCount = (activeQuickFilter === 'pending' || activeQuickFilter === 'passed' || activeQuickFilter === 'ebook_pending' || activeQuickFilter === 'ebook_published')
+                ? filteredData.length
+                : stats.total;
+
+            if (chartCenter) chartCenter.innerText = centerCount;
 
             const ctx = chartCanvas.getContext('2d');
             if (statusChartInstance) {
@@ -2038,7 +2047,12 @@
             if (legPassed) legPassed.innerText = stats.passed;
             if (legPending) legPending.innerText = stats.pending;
             if (legFailed) legFailed.innerText = stats.failed;
-            if (chartCenter) chartCenter.innerText = stats.total;
+
+            const centerCount = (activeQuickFilter === 'pending' || activeQuickFilter === 'passed' || activeQuickFilter === 'ebook_pending' || activeQuickFilter === 'ebook_published')
+                ? staffFilteredData.length
+                : stats.total;
+
+            if (chartCenter) chartCenter.innerText = centerCount;
 
             const ctx = chartCanvas.getContext('2d');
             if (staffStatusChartInstance) {
