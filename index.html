@@ -276,6 +276,7 @@
                                 <div>
                                     <select id="homeEbookStatusFilter" onchange="onEbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500">
                                         <option value="">🏷️ สถานะทั้งหมด</option>
+                                        <option value="รายการ eBook">รายการ eBook</option>
                                         <option value="ดำเนินการจดลิขสิทธิ์">ดำเนินการจดลิขสิทธิ์</option>
                                         <option value="จัดทำ eBook">จัดทำ eBook</option>
                                         <option value="จัดจำหน่ายผ่าน SE-ED">จัดจำหน่ายผ่าน SE-ED</option>
@@ -432,6 +433,7 @@
                                 <div>
                                     <select id="staffEbookStatusFilter" onchange="onStaffEbookFilterChange()" class="w-full py-2 px-3 bg-white border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500">
                                         <option value="">🏷️ สถานะทั้งหมด</option>
+                                        <option value="รายการ eBook">รายการ eBook</option>
                                         <option value="ดำเนินการจดลิขสิทธิ์">ดำเนินการจดลิขสิทธิ์</option>
                                         <option value="จัดทำ eBook">จัดทำ eBook</option>
                                         <option value="จัดจำหน่ายผ่าน SE-ED">จัดจำหน่ายผ่าน SE-ED</option>
@@ -1818,7 +1820,9 @@
                     const matchDept = !ebDept || item.department === ebDept;
                     
                     let matchStatus = true;
-                    if (ebStatus === 'ดำเนินการจดลิขสิทธิ์') {
+                    if (ebStatus === 'รายการ eBook') {
+                        matchStatus = true;
+                    } else if (ebStatus === 'ดำเนินการจดลิขสิทธิ์') {
                         matchStatus = EBOOK_COPYRIGHT_STEPS.includes(item.evaluation_status);
                     } else if (ebStatus === 'จัดทำ eBook') {
                         matchStatus = EBOOK_PRODUCTION_STEPS.includes(item.evaluation_status);
@@ -1971,9 +1975,9 @@
             const tbStatus = document.getElementById(`${prefix}TextbookStatusFilter`)?.value || '';
             const ebStatus = document.getElementById(`${prefix}EbookStatusFilter`)?.value || '';
 
-            const isSpecificFilterActive = (activeQuickFilter === 'pending' || activeQuickFilter === 'passed' || activeQuickFilter === 'ebook_pending' || activeQuickFilter === 'ebook_published' || !!tbStatus || !!ebStatus);
+            const isSpecificSubFilter = (activeQuickFilter === 'pending' || activeQuickFilter === 'passed' || activeQuickFilter === 'ebook_pending' || activeQuickFilter === 'ebook_published' || !!tbStatus || (!!ebStatus && ebStatus !== 'รายการ eBook'));
 
-            const total = isSpecificFilterActive ? 0 : scopeData.length;
+            const total = isSpecificSubFilter ? 0 : scopeData.length;
 
             const pending = scopeData.filter(i => isItemPending(i)).length;
             const passed = scopeData.filter(i => isItemPassed(i)).length;
@@ -2001,10 +2005,10 @@
             
             const tbStatus = document.getElementById('homeTextbookStatusFilter')?.value || '';
             const ebStatus = document.getElementById('homeEbookStatusFilter')?.value || '';
-            const isSpecificFilterActive = (activeQuickFilter === 'pending' || activeQuickFilter === 'passed' || activeQuickFilter === 'ebook_pending' || activeQuickFilter === 'ebook_published' || !!tbStatus || !!ebStatus);
+            const isSpecificSubFilter = (activeQuickFilter === 'pending' || activeQuickFilter === 'passed' || activeQuickFilter === 'ebook_pending' || activeQuickFilter === 'ebook_published' || !!tbStatus || (!!ebStatus && ebStatus !== 'รายการ eBook'));
 
             // คำนวณจำนวนรายการรวมกลางวงกราฟ
-            const centerCount = isSpecificFilterActive
+            const centerCount = isSpecificSubFilter
                 ? filteredData.length
                 : stats.total;
 
@@ -2057,9 +2061,9 @@
 
             const tbStatus = document.getElementById('staffTextbookStatusFilter')?.value || '';
             const ebStatus = document.getElementById('staffEbookStatusFilter')?.value || '';
-            const isSpecificFilterActive = (activeQuickFilter === 'pending' || activeQuickFilter === 'passed' || activeQuickFilter === 'ebook_pending' || activeQuickFilter === 'ebook_published' || !!tbStatus || !!ebStatus);
+            const isSpecificSubFilter = (activeQuickFilter === 'pending' || activeQuickFilter === 'passed' || activeQuickFilter === 'ebook_pending' || activeQuickFilter === 'ebook_published' || !!tbStatus || (!!ebStatus && ebStatus !== 'รายการ eBook'));
 
-            const centerCount = isSpecificFilterActive
+            const centerCount = isSpecificSubFilter
                 ? staffFilteredData.length
                 : stats.total;
 
