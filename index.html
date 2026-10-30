@@ -1958,7 +1958,7 @@
             if (elemEbookPublished) elemEbookPublished.innerText = ebookPublished;
         }
 
-        function computeChartDataset(sourceData) {
+        function computeChartDataset(sourceData, prefix = 'home') {
             let scopeData = sourceData;
             
             // สวิชกลุ่มข้อมูลตาม KPI Card ที่เลือกเพื่อใช้สร้างสัดส่วนบนกราฟ
@@ -1968,9 +1968,12 @@
                 scopeData = sourceData.filter(i => i.targetTable === 'ebook_evaluation');
             }
 
-            const total = (activeQuickFilter === 'pending' || activeQuickFilter === 'passed' || activeQuickFilter === 'ebook_pending' || activeQuickFilter === 'ebook_published') 
-                ? 0 
-                : scopeData.length;
+            const tbStatus = document.getElementById(`${prefix}TextbookStatusFilter`)?.value || '';
+            const ebStatus = document.getElementById(`${prefix}EbookStatusFilter`)?.value || '';
+
+            const isSpecificFilterActive = (activeQuickFilter === 'pending' || activeQuickFilter === 'passed' || activeQuickFilter === 'ebook_pending' || activeQuickFilter === 'ebook_published' || !!tbStatus || !!ebStatus);
+
+            const total = isSpecificFilterActive ? 0 : scopeData.length;
 
             const pending = scopeData.filter(i => isItemPending(i)).length;
             const passed = scopeData.filter(i => isItemPassed(i)).length;
@@ -1983,7 +1986,7 @@
             const chartCanvas = document.getElementById('statusChart');
             if (!chartCanvas || typeof Chart === 'undefined') return;
 
-            const stats = computeChartDataset(filteredData);
+            const stats = computeChartDataset(filteredData, 'home');
 
             const legTotal = document.getElementById('legendTotal');
             const legPassed = document.getElementById('legendPassed');
@@ -1996,8 +1999,12 @@
             if (legPending) legPending.innerText = stats.pending;
             if (legFailed) legFailed.innerText = stats.failed;
             
+            const tbStatus = document.getElementById('homeTextbookStatusFilter')?.value || '';
+            const ebStatus = document.getElementById('homeEbookStatusFilter')?.value || '';
+            const isSpecificFilterActive = (activeQuickFilter === 'pending' || activeQuickFilter === 'passed' || activeQuickFilter === 'ebook_pending' || activeQuickFilter === 'ebook_published' || !!tbStatus || !!ebStatus);
+
             // คำนวณจำนวนรายการรวมกลางวงกราฟ
-            const centerCount = (activeQuickFilter === 'pending' || activeQuickFilter === 'passed' || activeQuickFilter === 'ebook_pending' || activeQuickFilter === 'ebook_published')
+            const centerCount = isSpecificFilterActive
                 ? filteredData.length
                 : stats.total;
 
@@ -2035,7 +2042,7 @@
             const chartCanvas = document.getElementById('staffStatusChart');
             if (!chartCanvas || typeof Chart === 'undefined') return;
 
-            const stats = computeChartDataset(staffFilteredData);
+            const stats = computeChartDataset(staffFilteredData, 'staff');
 
             const legTotal = document.getElementById('staffLegendTotal');
             const legPassed = document.getElementById('staffLegendPassed');
@@ -2048,7 +2055,11 @@
             if (legPending) legPending.innerText = stats.pending;
             if (legFailed) legFailed.innerText = stats.failed;
 
-            const centerCount = (activeQuickFilter === 'pending' || activeQuickFilter === 'passed' || activeQuickFilter === 'ebook_pending' || activeQuickFilter === 'ebook_published')
+            const tbStatus = document.getElementById('staffTextbookStatusFilter')?.value || '';
+            const ebStatus = document.getElementById('staffEbookStatusFilter')?.value || '';
+            const isSpecificFilterActive = (activeQuickFilter === 'pending' || activeQuickFilter === 'passed' || activeQuickFilter === 'ebook_pending' || activeQuickFilter === 'ebook_published' || !!tbStatus || !!ebStatus);
+
+            const centerCount = isSpecificFilterActive
                 ? staffFilteredData.length
                 : stats.total;
 
